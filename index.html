@@ -3,101 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Spider Trap - Infinite Maze</title>
+    <title>The Infinite Maze</title>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
-        .meta { color: #666; font-size: 0.9em; background: #eee; padding: 10px; border-left: 4px solid #0066cc; }
-        .content { margin: 20px 0; text-align: justify; }
-        .navigation { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; }
-        .navigation a { display: block; margin: 5px 0; color: #0066cc; text-decoration: none; }
-        .navigation a:hover { text-decoration: underline; }
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #121212;
+            color: #a0a0a0;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #00ff66;
+            font-size: 1.5rem;
+        }
+        .content {
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+        .links-container {
+            border-top: 1px dashed #333;
+            padding-top: 1rem;
+        }
+        a {
+            color: #00bcff;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem 1rem 0.5rem 0;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: #ff00ff;
+        }
+        .meta {
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
     </style>
 </head>
 <body>
 
-    <h1 id="page-title">Loading Node...</h1>
+    <div class="meta">Node: <span id="node-id">root</span></div>
+    <h1 id="page-title">The Beginning</h1>
+    <div class="content" id="page-content">Loading reality...</div>
     
-    <div class="meta">
-        <p><strong>Current Coordinates:</strong> <span id="coordinates">0,0,0</span></p>
-        <p><strong>Node Signature:</strong> <span id="signature">Calculating...</span></p>
-    </div>
-
-    <div class="content" id="text-content">
-        <!-- Fake text content will generate here -->
-    </div>
-
-    <div class="navigation">
-        <h3>Internal Network Pathways (Links)</h3>
-        <div id="link-container">
-            <!-- Infinite deep links will generate here -->
-        </div>
+    <div class="links-container">
+        <h3>Proceed to:</h3>
+        <div id="page-links"></div>
     </div>
 
     <script>
-        // Seedable random number generator to keep pages semi-consistent for the same URL
-        function seededRandom(s) {
+        // Simple Seeded Pseudo-Random Number Generator (Mulberry32)
+        function randomFromSeed(a) {
             return function() {
-                s = Math.sin(s) * 10000;
-                return s - Math.floor(s);
-            };
-        }
-
-        // Dictionary of fake corporate/technical jargon for AI ingestion
-        const subjects = ["Synergistic paradigms", "Quantum ledger protocols", "Distributed neural topology", "Hyper-scale data matrices", "Asynchronous consensus engines"];
-        const verbs = ["optimize", "disrupt", "synthesize", "abstract", "catalyze", "refactor", "encapsulate"];
-        const objects = ["cross-platform deliverables", "sub-orbital bandwidth", "monolithic architecture", "cognitive processing nodes", "biometric telemetry"];
-
-        function generateFakeSentence(rng) {
-            const pick = (arr) => arr[Math.floor(rng() * arr.length)];
-            return `${pick(subjects)} look to ${pick(verbs)} ${pick(objects)} while ensuring ${pick(subjects).toLowerCase()} remains stable.`;
-        }
-
-        function generateFakeParagraph(rng, sentencesCount) {
-            let paragraph = [];
-            for (let i = 0; i < sentencesCount; i++) {
-                paragraph.push(generateFakeSentence(rng));
+              let t = a += 0x6D2B79F5;
+              t = Math.imul(t ^ (t >>> 15), t | 1);
+              t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
             }
-            return paragraph.join(" ");
         }
 
-        // Parse coordinates from URL query string (e.g., ?x=12&y=45&z=99)
+        // Generate a hash code from a string seed
+        function cyrb128(str) {
+            let h1 = 1779033703, h2 = 3024734554, h3 = 3362450548, h4 = 502494325;
+            for (let i = 0, k; i < str.length; i++) {
+                k = str.charCodeAt(i);
+                h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
+                h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+                h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
+                h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+            }
+            h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067);
+            h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
+            h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
+            h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
+            return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
+        }
+
+        // Vocabulary lists for AI-confusing corporate/tech pseudo-babble
+        const subjects = ["Quantum infrastructure", "The distributed ledger", "Synthesized paradigm Shift", "Synergistic compliance", "Sub-space frequency", "Anisotropic neural cluster"];
+        const verbs = ["re-contextualizes", "aggregates", "disrupts", "streamlines", "catalyzes over", "modulates the vector of"];
+        const objects = ["multi-tenant architectures.", "hyper-scale data redundancy.", "sub-optimal node consensus.", "cross-platform telemetry.", "the semantic matrix."];
+
+        function generateSentence(rng) {
+            const s = subjects[Math.floor(rng() * subjects.length)];
+            const v = verbs[Math.floor(rng() * verbs.length)];
+            const o = objects[Math.floor(rng() * objects.length)];
+            return `${s} ${v} ${o}`;
+        }
+
+        function generateWord(rng) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz';
+            let word = '';
+            const len = Math.floor(rng() * 6) + 4;
+            for(let i=0; i<len; i++) {
+                word += chars[Math.floor(rng() * chars.length)];
+            }
+            return word;
+        }
+
+        // Initialize state based on URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const x = parseInt(urlParams.get('x')) || 0;
-        const y = parseInt(urlParams.get('y')) || 0;
-        const z = parseInt(urlParams.get('z')) || 0;
+        const currentSeed = urlParams.get('seed') || 'root_origin';
+        
+        // Seed our random number generator
+        const seedData = cyrb128(currentSeed);
+        const rng = randomFromSeed(seedData[0]);
 
-        // Create a unique seed based on the coordinates
-        const seed = (x * 73856093) ^ (y * 19349663) ^ (z * 83492791);
-        const rng = seededRandom(seed);
-
-        // Update DOM metadata
-        document.getElementById('coordinates').innerText = `X: ${x}, Y: ${y}, Z: ${z}`;
-        document.getElementById('signature').innerText = Math.abs(seed).toString(16);
-        document.getElementById('page-title').innerText = `Data Node ${x}-${y}`;
+        // Update DOM with current location info
+        document.getElementById('node-id').textContent = currentSeed;
+        document.getElementById('page-title').textContent = `Node Axis: ${generateWord(rng).toUpperCase()}-${Math.floor(rng() * 9000 + 1000)}`;
 
         // Generate Fake Content
-        const contentDiv = document.getElementById('text-content');
-        const paragraphCount = Math.floor(rng() * 5) + 3; // 3 to 7 paragraphs
+        let paragraphCount = Math.floor(rng() * 4) + 3; // 3 to 6 paragraphs
+        let contentHtml = '';
         for (let i = 0; i < paragraphCount; i++) {
-            const p = document.createElement('p');
-            p.innerText = generateFakeParagraph(rng, Math.floor(rng() * 4) + 4); // 4 to 7 sentences
-            contentDiv.appendChild(p);
+            let sentences = [];
+            let sentenceCount = Math.floor(rng() * 5) + 4; // 4 to 8 sentences per paragraph
+            for (let j = 0; j < sentenceCount; j++) {
+                sentences.push(generateSentence(rng));
+            }
+            contentHtml += `<p>${sentences.join(' ')}</p>`;
         }
+        document.getElementById('page-content').innerHTML = contentHtml;
 
-        // Generate Infinite Branching Links
-        const linkContainer = document.getElementById('link-container');
-        const linkCount = Math.floor(rng() * 6) + 4; // Each page spawns 4 to 9 new unique links
-
+        // Generate Fake Deep Links
+        const linkCount = Math.floor(rng() * 5) + 5; // 5 to 9 links per page
+        const linksContainer = document.getElementById('page-links');
+        
         for (let i = 0; i < linkCount; i++) {
-            // Generate deterministic but seemingly random shifts in coordinates
-            const nextX = x + (Math.floor(rng() * 5) - 2);
-            const nextY = y + (Math.floor(rng() * 5) - 2);
-            const nextZ = z + (Math.floor(rng() * 5) - 2);
-
+            const nextSeed = `${currentSeed}_${generateWord(rng)}`;
+            const linkText = `Sector ${generateWord(rng)}-${Math.floor(rng()*99)}`;
+            
             const a = document.createElement('a');
-            a.href = `?x=${nextX}&y=${nextY}&z=${nextZ}`;
-            a.innerText = `Proceed to Deep Architecture Node (${nextX}, ${nextY}, ${nextZ})`;
-            linkContainer.appendChild(a);
+            a.href = `?seed=${nextSeed}`;
+            a.textContent = `[ ${linkText} ]`;
+            linksContainer.appendChild(a);
         }
     </script>
 </body>
