@@ -68,6 +68,10 @@
             letter-spacing: -.055em;
         }
 
+        .brand a {
+            text-decoration: none;
+        }
+
         .edition {
             margin-top: 6px;
             color: var(--muted);
@@ -353,21 +357,21 @@
     </div>
 
     <header class="masthead">
-        <h1 class="brand">The Meridian Ledger</h1>
+        <h1 class="brand"><a href="/">The Meridian Ledger</a></h1>
         <div class="edition">
             National · World · Science · Culture · Business
         </div>
     </header>
 
     <nav class="navigation">
-        <a href="?section=latest">Latest</a>
-        <a href="?section=politics">Politics</a>
-        <a href="?section=world">World</a>
-        <a href="?section=science">Science</a>
-        <a href="?section=technology">Technology</a>
-        <a href="?section=business">Business</a>
-        <a href="?section=culture">Culture</a>
-        <a href="?section=archive">Archive</a>
+        <a href="/">Latest</a>
+        <a href="/politics">Politics</a>
+        <a href="/world">World</a>
+        <a href="/science">Science</a>
+        <a href="/technology">Technology</a>
+        <a href="/business">Business</a>
+        <a href="/culture">Culture</a>
+        <a href="/archive">Archive</a>
     </nav>
 
     <div class="breaking">
@@ -425,8 +429,8 @@
 "use strict";
 
 /*
- * The content below is procedurally generated from the URL.
- * The same URL always produces the same article.
+ * The content below is procedurally generated from the URL folder structure.
+ * The same folder path always produces the same article.
  */
 
 function hashString(value) {
@@ -610,7 +614,7 @@ function makeDek(rng) {
 }
 
 
-/* URL / STORY GENERATION */
+/* FOLDER PATH / STORY GENERATION */
 
 function makeSlug(rng) {
     const words = [
@@ -631,16 +635,17 @@ function makeSlug(rng) {
         integer(rng, 100, 999);
 }
 
-function makeDestination(seed, rng) {
-    return seed + "/" + makeSlug(rng);
+function makeDestination(sectionName, rng) {
+    const safeSection = sectionName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return "/" + safeSection + "/" + makeSlug(rng);
 }
 
 function makeArticle(seed) {
-
     const rng = random(seed);
+    const chosenSection = choose(rng, sections);
 
     const article = {
-        section: choose(rng, sections),
+        section: chosenSection,
         headline: makeHeadline(rng),
         dek: makeDek(rng),
         author: choose(rng, names),
@@ -662,17 +667,18 @@ function makeArticle(seed) {
     for (let i = 0; i < sidebarCount; i++) {
         article.sidebar.push({
             title: makeHeadline(rng),
-            seed: makeDestination(seed, rng)
+            path: makeDestination(chosenSection, rng)
         });
     }
 
     const relatedCount = 3;
 
     for (let i = 0; i < relatedCount; i++) {
+        const relSection = choose(rng, sections);
         article.related.push({
             title: makeHeadline(rng),
-            section: choose(rng, sections),
-            seed: makeDestination(seed, rng)
+            section: relSection,
+            path: makeDestination(relSection, rng)
         });
     }
 
@@ -685,7 +691,6 @@ function makeArticle(seed) {
 /* DOM HELPERS */
 
 function element(tag, text, className) {
-
     const node = document.createElement(tag);
 
     if (text !== undefined) {
@@ -699,26 +704,10 @@ function element(tag, text, className) {
     return node;
 }
 
-function linkFor(seed) {
-
-    const url = new URL(
-        window.location.href
-    );
-
-    url.search = "";
-    url.searchParams.set(
-        "story",
-        seed
-    );
-
-    return url.toString();
-}
-
 
 /* RENDER */
 
 function render(seed) {
-
     const article = makeArticle(seed);
 
     document.title =
@@ -759,7 +748,6 @@ function render(seed) {
 
     article.paragraphs.forEach(
         (text, index) => {
-
             const p =
                 element("p", text);
 
@@ -781,7 +769,6 @@ function render(seed) {
 
     article.sidebar.forEach(
         (story, index) => {
-
             const a =
                 element(
                     "a",
@@ -789,8 +776,7 @@ function render(seed) {
                     "story-link"
                 );
 
-            a.href =
-                linkFor(story.seed);
+            a.href = story.path;
 
             const number =
                 element(
@@ -833,7 +819,6 @@ function render(seed) {
 
     article.related.forEach(
         story => {
-
             const a =
                 element(
                     "a",
@@ -841,8 +826,7 @@ function render(seed) {
                     "related-card"
                 );
 
-            a.href =
-                linkFor(story.seed);
+            a.href = story.path;
 
             const category =
                 element(
@@ -877,19 +861,27 @@ function render(seed) {
 }
 
 
-/* INITIAL STATE */
+/* INITIAL STATE / GITHUB PAGES ROUTING */
 
 function getSeed() {
+    // 1. Check if we arrived via the 404.html redirection hack
+    const params = new URLSearchParams(window.location.search);
+    const redirectedPath = params.get("p");
+    
+    if (redirectedPath) {
+        // Clean up the URL in the browser bar to look like a clean folder path
+        window.history.replaceState({}, "", "/" + redirectedPath.replace(/^\//, ''));
+        return "/" + redirectedPath.replace(/^\//, '');
+    }
 
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
+    // 2. Otherwise read standard pathname folders
+    const path = window.location.pathname;
+    
+    if (path === "" || path === "/" || path.endsWith("/index.html")) {
+        return "homepage";
+    }
 
-    return (
-        params.get("story") ||
-        "homepage"
-    );
+    return path;
 }
 
 render(getSeed());
