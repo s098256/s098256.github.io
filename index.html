@@ -3,144 +3,663 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="An endlessly generated maze of strange digital nodes."
+    >
+
     <title>The Infinite Maze</title>
+
     <style>
+        :root {
+            --bg: #080b0a;
+            --surface: #0d1210;
+            --surface-hover: #121a16;
+            --border: #1b2a22;
+            --text: #9ba8a1;
+            --muted: #526058;
+            --green: #00ff66;
+            --green-dim: #00a844;
+            --blue: #00bcff;
+            --magenta: #ff00cc;
+
+            --glow-green:
+                0 0 12px rgba(0, 255, 102, 0.25);
+            --glow-blue:
+                0 0 12px rgba(0, 188, 255, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #121212;
-            color: #a0a0a0;
-            padding: 2rem;
-            max-width: 800px;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem 1.25rem;
+
+            background:
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(0, 255, 102, 0.04),
+                    transparent 35%
+                ),
+                var(--bg);
+
+            color: var(--text);
+            font-family:
+                "Courier New",
+                Courier,
+                monospace;
+
+            line-height: 1.7;
+        }
+
+        ::selection {
+            color: #000;
+            background: var(--green);
+        }
+
+        .page {
+            width: min(800px, 100%);
             margin: 0 auto;
-            line-height: 1.6;
         }
-        h1 {
-            color: #00ff66;
-            font-size: 1.5rem;
-        }
-        .content {
-            margin-bottom: 2rem;
-            text-align: justify;
-        }
-        .links-container {
-            border-top: 1px dashed #333;
-            padding-top: 1rem;
-        }
-        a {
-            color: #00bcff;
-            text-decoration: none;
-            display: inline-block;
-            margin: 0.5rem 1rem 0.5rem 0;
-        }
-        a:hover {
-            text-decoration: underline;
-            color: #ff00ff;
-        }
+
         .meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+
+            color: var(--muted);
+            font-size: 0.75rem;
+
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .status {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: var(--glow-green);
+
+            animation: pulse 2s infinite;
+        }
+
+        h1 {
+            margin: 0 0 1.5rem;
+
+            color: var(--green);
+            font-size: clamp(1.25rem, 4vw, 1.75rem);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+
+            text-shadow: var(--glow-green);
+        }
+
+        .content {
+            margin-bottom: 2.5rem;
+        }
+
+        .content p {
+            margin: 0 0 1.25rem;
+            text-align: left;
+        }
+
+        .content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .links-container {
+            padding-top: 1.25rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .links-container h2 {
+            margin: 0 0 1rem;
+
+            color: var(--muted);
             font-size: 0.8rem;
-            color: #555;
-            margin-bottom: 2rem;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        #page-links {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .node-link {
+            display: block;
+
+            padding: 0.65rem 0.8rem;
+
+            color: var(--blue);
+            text-decoration: none;
+
+            border: 1px solid transparent;
+            border-radius: 4px;
+
+            transition:
+                color 120ms ease,
+                background 120ms ease,
+                border-color 120ms ease,
+                transform 120ms ease;
+        }
+
+        .node-link:hover,
+        .node-link:focus-visible {
+            color: var(--magenta);
+            background: var(--surface-hover);
+            border-color: var(--border);
+            transform: translateX(4px);
+            outline: none;
+        }
+
+        .node-link::before {
+            content: "↳ ";
+            color: var(--green-dim);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+
+            border-top: 1px dashed var(--border);
+        }
+
+        button {
+            padding: 0.5rem 0.75rem;
+
+            color: var(--muted);
+            background: transparent;
+
+            font: inherit;
+            font-size: 0.75rem;
+
+            border: 1px solid var(--border);
+            border-radius: 4px;
+
+            cursor: pointer;
+
+            transition:
+                color 120ms ease,
+                border-color 120ms ease,
+                background 120ms ease;
+        }
+
+        button:hover,
+        button:focus-visible {
+            color: var(--green);
+            border-color: var(--green-dim);
+            background: var(--surface);
+            outline: none;
+        }
+
+        .footer {
+            margin-top: 2rem;
+
+            color: #29352f;
+            font-size: 0.65rem;
+            text-align: center;
+        }
+
+        .error {
+            color: #ff5f5f;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1.25rem 1rem;
+            }
+
+            .content p {
+                text-align: left;
+            }
+
+            .node-link {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
         }
     </style>
 </head>
-<body>
 
-    <div class="meta">Node: <span id="node-id">root</span></div>
-    <h1 id="page-title">The Beginning</h1>
-    <div class="content" id="page-content">Loading reality...</div>
-    
-    <div class="links-container">
-        <h3>Proceed to:</h3>
-        <div id="page-links"></div>
-    </div>
+<body>
+    <main class="page">
+
+        <div class="meta">
+            <span class="status" aria-hidden="true"></span>
+            <span>NODE:</span>
+            <span id="node-id">root_origin</span>
+        </div>
+
+        <h1 id="page-title">Connecting...</h1>
+
+        <section
+            class="content"
+            id="page-content"
+            aria-live="polite"
+        >
+            Loading reality...
+        </section>
+
+        <nav
+            class="links-container"
+            aria-label="Available nodes"
+        >
+            <h2>Proceed to:</h2>
+            <div id="page-links"></div>
+        </nav>
+
+        <div class="controls">
+            <button id="random-node" type="button">
+                Random Node
+            </button>
+
+            <button id="root-node" type="button">
+                Return to Origin
+            </button>
+        </div>
+
+        <footer class="footer">
+            THERE IS NO FINAL NODE
+        </footer>
+    </main>
 
     <script>
-        // Simple Seeded Pseudo-Random Number Generator (Mulberry32)
-        function randomFromSeed(a) {
-            return function() {
-              let t = a += 0x6D2B79F5;
-              t = Math.imul(t ^ (t >>> 15), t | 1);
-              t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-            }
+        "use strict";
+
+        /* ---------------------------------------------------------
+           Seeded random number generator
+        --------------------------------------------------------- */
+
+        function randomFromSeed(seed) {
+            let value = seed >>> 0;
+
+            return function random() {
+                value += 0x6D2B79F5;
+
+                let t = value;
+
+                t = Math.imul(
+                    t ^ (t >>> 15),
+                    t | 1
+                );
+
+                t ^= t + Math.imul(
+                    t ^ (t >>> 7),
+                    t | 61
+                );
+
+                return (
+                    (t ^ (t >>> 14)) >>> 0
+                ) / 4294967296;
+            };
         }
 
-        // Generate a hash code from a string seed
-        function cyrb128(str) {
-            let h1 = 1779033703, h2 = 3024734554, h3 = 3362450548, h4 = 502494325;
-            for (let i = 0, k; i < str.length; i++) {
-                k = str.charCodeAt(i);
-                h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
-                h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
-                h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
-                h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+        function hashString(str) {
+            let hash = 2166136261;
+
+            for (let i = 0; i < str.length; i++) {
+                hash ^= str.charCodeAt(i);
+                hash = Math.imul(hash, 16777619);
             }
-            h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067);
-            h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
-            h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
-            h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
-            return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
+
+            return hash >>> 0;
         }
 
-        // Vocabulary lists for AI-confusing corporate/tech pseudo-babble
-        const subjects = ["Quantum infrastructure", "The distributed ledger", "Synthesized paradigm Shift", "Synergistic compliance", "Sub-space frequency", "Anisotropic neural cluster"];
-        const verbs = ["re-contextualizes", "aggregates", "disrupts", "streamlines", "catalyzes over", "modulates the vector of"];
-        const objects = ["multi-tenant architectures.", "hyper-scale data redundancy.", "sub-optimal node consensus.", "cross-platform telemetry.", "the semantic matrix."];
+        function pick(rng, array) {
+            return array[
+                Math.floor(rng() * array.length)
+            ];
+        }
+
+        function randomInt(rng, min, max) {
+            return Math.floor(
+                rng() * (max - min + 1)
+            ) + min;
+        }
+
+        /* ---------------------------------------------------------
+           Vocabulary
+        --------------------------------------------------------- */
+
+        const subjects = [
+            "Quantum infrastructure",
+            "The distributed ledger",
+            "Synthetic paradigm architecture",
+            "Synergistic compliance",
+            "Sub-space frequency",
+            "The anisotropic neural cluster",
+            "Recursive governance",
+            "The peripheral intelligence",
+            "Distributed cognition",
+            "Temporal infrastructure",
+            "The obsolete protocol",
+            "Unverified consensus"
+        ];
+
+        const verbs = [
+            "re-contextualizes",
+            "aggregates",
+            "disrupts",
+            "streamlines",
+            "catalyzes",
+            "modulates",
+            "fragments",
+            "reconstructs",
+            "obscures",
+            "translates",
+            "duplicates",
+            "anticipates"
+        ];
+
+        const objects = [
+            "multi-tenant architectures",
+            "hyper-scale data redundancy",
+            "sub-optimal node consensus",
+            "cross-platform telemetry",
+            "the semantic matrix",
+            "latent infrastructure",
+            "recursive authorization layers",
+            "non-deterministic workloads",
+            "the forgotten namespace",
+            "distributed memory structures",
+            "unresolved system dependencies",
+            "the original transmission"
+        ];
+
+        const endings = [
+            "No further explanation was provided.",
+            "The system classified this as expected behavior.",
+            "Nobody remembered authorizing the transition.",
+            "The distinction became irrelevant after synchronization.",
+            "A response was generated, but never delivered.",
+            "The previous node contained the same message.",
+            "The archive insists that this has happened before.",
+            "At least one observer disagreed."
+        ];
+
+        const syllables = [
+            "ka", "ra", "ve", "no",
+            "ti", "za", "lu", "ex",
+            "mi", "qo", "ta", "re"
+        ];
+
+        /* ---------------------------------------------------------
+           Content generation
+        --------------------------------------------------------- */
+
+        function generateWord(rng, min = 4, max = 8) {
+            const length = randomInt(
+                rng,
+                min,
+                max
+            );
+
+            let word = "";
+
+            for (let i = 0; i < length; i++) {
+                word += pick(rng, syllables);
+            }
+
+            return word.slice(0, length);
+        }
 
         function generateSentence(rng) {
-            const s = subjects[Math.floor(rng() * subjects.length)];
-            const v = verbs[Math.floor(rng() * verbs.length)];
-            const o = objects[Math.floor(rng() * objects.length)];
-            return `${s} ${v} ${o}`;
+            const subject = pick(rng, subjects);
+            const verb = pick(rng, verbs);
+            const object = pick(rng, objects);
+
+            return `${subject} ${verb} ${object}.`;
         }
 
-        function generateWord(rng) {
-            const chars = 'abcdefghijklmnopqrstuvwxyz';
-            let word = '';
-            const len = Math.floor(rng() * 6) + 4;
-            for(let i=0; i<len; i++) {
-                word += chars[Math.floor(rng() * chars.length)];
+        function generateParagraph(rng) {
+            const sentenceCount = randomInt(rng, 4, 7);
+
+            const sentences = [];
+
+            for (let i = 0; i < sentenceCount; i++) {
+                sentences.push(
+                    generateSentence(rng)
+                );
             }
-            return word;
-        }
 
-        // Initialize state based on URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentSeed = urlParams.get('seed') || 'root_origin';
-        
-        // Seed our random number generator
-        const seedData = cyrb128(currentSeed);
-        const rng = randomFromSeed(seedData[0]);
-
-        // Update DOM with current location info
-        document.getElementById('node-id').textContent = currentSeed;
-        document.getElementById('page-title').textContent = `Node Axis: ${generateWord(rng).toUpperCase()}-${Math.floor(rng() * 9000 + 1000)}`;
-
-        // Generate Fake Content
-        let paragraphCount = Math.floor(rng() * 4) + 3; // 3 to 6 paragraphs
-        let contentHtml = '';
-        for (let i = 0; i < paragraphCount; i++) {
-            let sentences = [];
-            let sentenceCount = Math.floor(rng() * 5) + 4; // 4 to 8 sentences per paragraph
-            for (let j = 0; j < sentenceCount; j++) {
-                sentences.push(generateSentence(rng));
+            // Occasionally give the paragraph a strange ending.
+            if (rng() < 0.35) {
+                sentences.push(
+                    pick(rng, endings)
+                );
             }
-            contentHtml += `<p>${sentences.join(' ')}</p>`;
-        }
-        document.getElementById('page-content').innerHTML = contentHtml;
 
-        // Generate Fake Deep Links
-        const linkCount = Math.floor(rng() * 5) + 5; // 5 to 9 links per page
-        const linksContainer = document.getElementById('page-links');
-        
-        for (let i = 0; i < linkCount; i++) {
-            const nextSeed = `${currentSeed}_${generateWord(rng)}`;
-            const linkText = `Sector ${generateWord(rng)}-${Math.floor(rng()*99)}`;
-            
-            const a = document.createElement('a');
-            a.href = `?seed=${nextSeed}`;
-            a.textContent = `[ ${linkText} ]`;
-            linksContainer.appendChild(a);
+            return sentences.join(" ");
+        }
+
+        /* ---------------------------------------------------------
+           DOM helpers
+        --------------------------------------------------------- */
+
+        const elements = {
+            nodeId: document.getElementById("node-id"),
+            title: document.getElementById("page-title"),
+            content: document.getElementById("page-content"),
+            links: document.getElementById("page-links"),
+            random: document.getElementById("random-node"),
+            root: document.getElementById("root-node")
+        };
+
+        function createElement(tag, text, className) {
+            const element = document.createElement(tag);
+
+            if (text !== undefined) {
+                element.textContent = text;
+            }
+
+            if (className) {
+                element.className = className;
+            }
+
+            return element;
+        }
+
+        /* ---------------------------------------------------------
+           Node generation
+        --------------------------------------------------------- */
+
+        function renderNode(seed) {
+            const rng = randomFromSeed(
+                hashString(seed)
+            );
+
+            elements.nodeId.textContent = seed;
+
+            const axis = generateWord(
+                rng,
+                5,
+                9
+            ).toUpperCase();
+
+            const number = randomInt(
+                rng,
+                1000,
+                9999
+            );
+
+            elements.title.textContent =
+                `Node Axis: ${axis}-${number}`;
+
+            // Generate content safely using DOM nodes.
+            elements.content.replaceChildren();
+
+            const paragraphCount = randomInt(
+                rng,
+                3,
+                6
+            );
+
+            for (
+                let i = 0;
+                i < paragraphCount;
+                i++
+            ) {
+                const paragraph = createElement(
+                    "p",
+                    generateParagraph(rng)
+                );
+
+                elements.content.appendChild(
+                    paragraph
+                );
+            }
+
+            // Generate links.
+            elements.links.replaceChildren();
+
+            const linkCount = randomInt(
+                rng,
+                5,
+                9
+            );
+
+            for (
+                let i = 0;
+                i < linkCount;
+                i++
+            ) {
+                const nextSeed =
+                    `${seed}_${generateWord(rng)}`;
+
+                const label =
+                    `Sector ${generateWord(rng, 5, 7)}-${randomInt(rng, 10, 99)}`;
+
+                const link =
+                    createElement(
+                        "a",
+                        `[ ${label} ]`,
+                        "node-link"
+                    );
+
+                link.href =
+                    `?seed=${encodeURIComponent(nextSeed)}`;
+
+                link.setAttribute(
+                    "aria-label",
+                    `Travel to ${label}`
+                );
+
+                elements.links.appendChild(link);
+            }
+
+            document.title =
+                `The Infinite Maze — ${axis}-${number}`;
+        }
+
+        /* ---------------------------------------------------------
+           Navigation
+        --------------------------------------------------------- */
+
+        function getCurrentSeed() {
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            return (
+                params.get("seed") ||
+                "root_origin"
+            );
+        }
+
+        function navigate(seed) {
+            const url =
+                new URL(window.location.href);
+
+            url.searchParams.set(
+                "seed",
+                seed
+            );
+
+            window.location.href = url.href;
+        }
+
+        elements.random.addEventListener(
+            "click",
+            () => {
+                const seed =
+                    `${getCurrentSeed()}_${generateWord(
+                        randomFromSeed(
+                            Date.now()
+                        )
+                    )}`;
+
+                navigate(seed);
+            }
+        );
+
+        elements.root.addEventListener(
+            "click",
+            () => {
+                navigate("root_origin");
+            }
+        );
+
+        /* ---------------------------------------------------------
+           Initialize
+        --------------------------------------------------------- */
+
+        try {
+            renderNode(
+                getCurrentSeed()
+            );
+        } catch (error) {
+            console.error(error);
+
+            elements.title.textContent =
+                "NODE FAILURE";
+
+            elements.content.replaceChildren(
+                createElement(
+                    "p",
+                    "Reality could not be reconstructed.",
+                    "error"
+                )
+            );
         }
     </script>
 </body>
