@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Meridian Ledger</title>
+
+    <!-- GITHUB PAGES SPA ROUTING REDIRECT -->
+    <script>
+        // This catches custom folder paths on GitHub Pages 404s and safely passes them to index.html
+        (function() {
+            var pathSegmentsToKeep = 0; // Set to 1 if using a project site like username.github.io/repo-name/
+            var l = window.location;
+            
+            // If we are on a custom path, redirect back to index.html with the path encoded
+            if (l.pathname !== "/") {
+                window.location.replace(
+                    l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+                    l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
+                    l.pathname.slice(1) + l.search + l.hash
+                );
+            }
+        })();
+    </script>
+
+    <!-- (Rest of your styles go here...) -->
