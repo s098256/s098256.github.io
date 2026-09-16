@@ -1,25 +1,19 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>THE INFINITE MAZE</title>
-
+    <title>SECTOR // 01</title>
     <style>
         :root {
             --bg: #050706;
             --panel: #090d0b;
             --panel2: #0d1410;
             --border: #1a2820;
-
             --text: #8f9d94;
             --muted: #3e4d45;
-
             --green: #00ff66;
             --green-dim: #008f3b;
-
             --blue: #00bfff;
             --red: #ff4050;
             --yellow: #d6cc45;
@@ -38,7 +32,6 @@
             margin: 0;
             min-height: 100vh;
             padding: 24px;
-
             background:
                 radial-gradient(
                     circle at 50% 0%,
@@ -46,14 +39,8 @@
                     transparent 45%
                 ),
                 var(--bg);
-
             color: var(--text);
-
-            font-family:
-                "Courier New",
-                Courier,
-                monospace;
-
+            font-family: "Courier New", Courier, monospace;
             line-height: 1.7;
         }
 
@@ -62,10 +49,6 @@
             margin: auto;
         }
 
-        /* =====================================================
-           HEADER
-        ===================================================== */
-
         .header {
             margin-bottom: 24px;
         }
@@ -73,11 +56,8 @@
         .system-line {
             display: flex;
             justify-content: space-between;
-
             padding-bottom: 10px;
-
             border-bottom: 1px dashed var(--border);
-
             color: var(--muted);
             font-size: 10px;
             letter-spacing: .08em;
@@ -89,20 +69,9 @@
 
         .title {
             margin: 22px 0 3px;
-
-            color: var(--green);
-
-            font-size: clamp(
-                21px,
-                5vw,
-                30px
-            );
-
+            color: var(--text);
+            font-size: clamp(16px, 3vw, 20px);
             letter-spacing: .08em;
-
-            text-shadow:
-                0 0 14px
-                rgba(0,255,102,.2);
         }
 
         .subtitle {
@@ -110,21 +79,11 @@
             font-size: 11px;
         }
 
-        /* =====================================================
-           NODE
-        ===================================================== */
-
         .node {
             overflow: hidden;
-
             margin-bottom: 20px;
-
             background: var(--panel);
-
-            border:
-                1px solid
-                var(--border);
-
+            border: 1px solid var(--border);
             border-radius: 4px;
         }
 
@@ -132,21 +91,14 @@
             display: flex;
             justify-content: space-between;
             gap: 15px;
-
             padding: 12px 15px;
-
             background: var(--panel2);
-
-            border-bottom:
-                1px solid
-                var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
         .node-id {
             overflow: hidden;
-
             color: var(--green);
-
             font-size: 11px;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -154,9 +106,7 @@
 
         .node-class {
             flex-shrink: 0;
-
             color: var(--purple);
-
             font-size: 10px;
             text-transform: uppercase;
         }
@@ -167,9 +117,7 @@
 
         .node-title {
             margin: 0 0 20px;
-
             color: #c4cec8;
-
             font-size: 18px;
             font-weight: normal;
         }
@@ -182,22 +130,12 @@
             margin-bottom: 0;
         }
 
-        /* =====================================================
-           SYSTEM MESSAGES
-        ===================================================== */
-
         .message {
             margin: 20px 0;
             padding: 12px 15px;
-
-            background:
-                rgba(255,255,255,.01);
-
-            border-left: 2px solid
-                var(--green);
-
+            background: rgba(255,255,255,.01);
+            border-left: 2px solid var(--green);
             color: #718078;
-
             font-size: 11px;
         }
 
@@ -213,30 +151,18 @@
 
         .message.exit {
             border-color: var(--green);
-
             color: var(--green);
-
-            background:
-                rgba(0,255,102,.025);
+            background: rgba(0,255,102,.025);
         }
-
-        /* =====================================================
-           PATHS
-        ===================================================== */
 
         .paths {
             padding: 18px 20px;
-
-            border-top:
-                1px dashed
-                var(--border);
+            border-top: 1px dashed var(--border);
         }
 
         .paths-label {
             margin-bottom: 10px;
-
             color: var(--muted);
-
             font-size: 10px;
             letter-spacing: .15em;
             text-transform: uppercase;
@@ -244,1235 +170,341 @@
 
         .path {
             display: block;
-
             width: 100%;
-
             margin: 5px 0;
             padding: 10px 12px;
-
             color: var(--blue);
             background: transparent;
-
-            border:
-                1px solid
-                transparent;
-
+            border: 1px solid transparent;
             border-radius: 3px;
-
             font: inherit;
             font-size: 12px;
-
             text-align: left;
-
+            text-decoration: none;
             cursor: pointer;
-
-            transition:
-                background .12s,
-                border-color .12s,
-                transform .12s;
+            transition: background .12s, border-color .12s, transform .12s;
         }
 
         .path:hover,
         .path:focus-visible {
             background: var(--panel2);
-
-            border-color:
-                var(--border);
-
-            transform:
-                translateX(4px);
-
+            border-color: var(--border);
+            transform: translateX(4px);
             outline: none;
         }
 
         .path::before {
             content: "→";
-
             margin-right: 10px;
-
-            color:
-                var(--green-dim);
+            color: var(--green-dim);
         }
-
-        .path.visited {
-            color: #596860;
-        }
-
-        .path.visited::after {
-            content: " [SEEN]";
-
-            color: #35423b;
-
-            font-size: 9px;
-        }
-
-        /* =====================================================
-           EXPLORATION DATA
-        ===================================================== */
 
         .telemetry {
             display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
-
             margin-bottom: 20px;
         }
 
         .telemetry-box {
             padding: 10px;
-
-            background:
-                var(--panel);
-
-            border:
-                1px solid
-                var(--border);
+            background: var(--panel);
+            border: 1px solid var(--border);
         }
 
         .telemetry-label {
             color: var(--muted);
-
             font-size: 9px;
             text-transform: uppercase;
         }
 
         .telemetry-value {
             margin-top: 3px;
-
             color: var(--text);
-
             font-size: 13px;
         }
 
-        /* =====================================================
-           FOOTER
-        ===================================================== */
-
         footer {
             margin-top: 30px;
-
             color: #202b25;
-
             font-size: 9px;
-
             text-align: center;
-
             letter-spacing: .1em;
         }
 
         @media (max-width: 600px) {
-
-            body {
-                padding: 12px;
-            }
-
-            .telemetry {
-                grid-template-columns: 1fr;
-            }
-
-            .node-body {
-                padding: 15px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            * {
-                transition: none !important;
-            }
+            body { padding: 12px; }
+            .telemetry { grid-template-columns: 1fr; }
+            .node-body { padding: 15px; }
         }
     </style>
 </head>
-
-
 <body>
 
 <div class="maze">
-
     <header class="header">
-
         <div class="system-line">
-
-            <span>
-                SYSTEM:
-                <span class="live">
-                    ONLINE
-                </span>
-            </span>
-
-            <span>
-                CONNECTION:
-                <span id="connection">
-                    STABLE
-                </span>
-            </span>
-
+            <span>STATUS: <span class="live">ACTIVE</span></span>
+            <span>NODE ACCESS: <span id="connection">LOCAL</span></span>
         </div>
-
-        <div class="title">
-            THE INFINITE MAZE
-        </div>
-
-        <div class="subtitle">
-            Navigation system operational.
-        </div>
-
+        <div class="title" id="page-heading">SUB-ROUTINE TERMINAL</div>
+        <div class="subtitle">Standard diagnostic logging node.</div>
     </header>
 
-
-    <!-- TELEMETRY -->
-
     <section class="telemetry">
-
         <div class="telemetry-box">
-
-            <div class="telemetry-label">
-                Depth
-            </div>
-
-            <div
-                class="telemetry-value"
-                id="depth"
-            >
-                0
-            </div>
-
+            <div class="telemetry-label">Node Vector</div>
+            <div class="telemetry-value" id="depth">-</div>
         </div>
-
-
         <div class="telemetry-box">
-
-            <div class="telemetry-label">
-                Nodes Observed
-            </div>
-
-            <div
-                class="telemetry-value"
-                id="visited"
-            >
-                0
-            </div>
-
+            <div class="telemetry-label">Environment</div>
+            <div class="telemetry-value" id="visited">ONLINE</div>
         </div>
-
-
         <div class="telemetry-box">
-
-            <div class="telemetry-label">
-                Exit Status
-            </div>
-
-            <div
-                class="telemetry-value"
-                id="exit-status"
-            >
-                NOT FOUND
-            </div>
-
+            <div class="telemetry-label">Route Status</div>
+            <div class="telemetry-value" id="exit-status">PENDING</div>
         </div>
-
     </section>
-
-
-    <!-- NODE -->
 
     <main id="node"></main>
 
-
     <footer>
-        NAVIGATION IS FUNCTIONAL.
-        EXIT IS NOT GUARANTEED.
+        LOGGING ACTIVE. RECORDING TRANSMISSION STATES.
     </footer>
-
 </div>
-
 
 <script>
 "use strict";
 
-
-/* ============================================================
-   IMPORTANT DESIGN NOTE
-   ============================================================
-
-   There is intentionally NO:
-
-   - exit button
-   - reset button
-   - origin button
-   - terminal state
-   - winning screen
-
-   Every path produces another node.
-
-   The "exit" is a narrative mechanism, not an actual
-   destination.
-
-   The labyrinth is generated deterministically from the
-   current seed.
-============================================================ */
-
-
-/* ============================================================
-   SEEDED RANDOMNESS
-============================================================ */
-
 function hashString(value) {
-
     let hash = 2166136261;
-
-    for (
-        let i = 0;
-        i < value.length;
-        i++
-    ) {
-
+    for (let i = 0; i < value.length; i++) {
         hash ^= value.charCodeAt(i);
-
-        hash = Math.imul(
-            hash,
-            16777619
-        );
+        hash = Math.imul(hash, 16777619);
     }
-
     return hash >>> 0;
 }
 
-
 function random(seed) {
-
-    let value =
-        hashString(seed);
-
+    let value = hashString(seed);
     return function () {
-
         value += 0x6D2B79F5;
-
         let t = value;
-
-        t = Math.imul(
-            t ^ (t >>> 15),
-            t | 1
-        );
-
-        t ^= t +
-            Math.imul(
-                t ^ (t >>> 7),
-                t | 61
-            );
-
-        return (
-            (t ^ (t >>> 14)) >>> 0
-        ) / 4294967296;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
 }
 
-
-function integer(
-    rng,
-    min,
-    max
-) {
-
-    return Math.floor(
-        rng() * (max - min + 1)
-    ) + min;
+function integer(rng, min, max) {
+    return Math.floor(rng() * (max - min + 1)) + min;
 }
 
-
-function choose(
-    rng,
-    array
-) {
-
-    return array[
-        Math.floor(
-            rng() * array.length
-        )
-    ];
+function choose(rng, array) {
+    return array[Math.floor(rng() * array.length)];
 }
-
-
-/* ============================================================
-   VOCABULARY
-============================================================ */
 
 const adjectives = [
-    "QUANTUM",
-    "RECURSIVE",
-    "SYNTHETIC",
-    "LATENT",
-    "TEMPORAL",
-    "PERIPHERAL",
-    "SEMANTIC",
-    "DISTRIBUTED",
-    "OBSOLETE",
-    "ANISOTROPIC",
-    "FRACTAL",
-    "EXTERNAL",
-    "UNVERIFIED",
-    "NULL"
+    "QUANTUM", "RECURSIVE", "SYNTHETIC", "LATENT", "TEMPORAL", 
+    "PERIPHERAL", "SEMANTIC", "DISTRIBUTED", "OBSOLETE", "ANISOTROPIC", 
+    "FRACTAL", "EXTERNAL", "UNVERIFIED", "NULL"
 ];
-
 
 const nouns = [
-    "VECTOR",
-    "ARCHIVE",
-    "PROTOCOL",
-    "MATRIX",
-    "SECTOR",
-    "CHAMBER",
-    "SIGNAL",
-    "BOUNDARY",
-    "INSTANCE",
-    "PROCESS",
-    "CHANNEL",
-    "LAYER"
+    "VECTOR", "ARCHIVE", "PROTOCOL", "MATRIX", "SECTOR", 
+    "CHAMBER", "SIGNAL", "BOUNDARY", "INSTANCE", "PROCESS", "CHANNEL", "LAYER"
 ];
-
 
 const subjects = [
-    "The distributed system",
-    "The archive",
-    "The previous observer",
-    "The navigation protocol",
-    "The peripheral intelligence",
-    "The original transmission",
-    "The node",
-    "The system",
-    "The recursive process"
+    "The distributed system", "The archive", "The previous observer", 
+    "The navigation protocol", "The peripheral intelligence", "The original transmission", 
+    "The node", "The system", "The recursive process"
 ];
-
 
 const verbs = [
-    "re-contextualizes",
-    "duplicates",
-    "obscures",
-    "aggregates",
-    "reconstructs",
-    "fragments",
-    "anticipates",
-    "preserves",
-    "contradicts",
-    "replaces",
-    "forgets"
+    "re-contextualizes", "duplicates", "obscures", "aggregates", 
+    "reconstructs", "fragments", "anticipates", "preserves", 
+    "contradicts", "replaces", "forgets"
 ];
-
 
 const objects = [
-    "the previous signal",
-    "the navigation state",
-    "the original instruction",
-    "the observer",
-    "the semantic boundary",
-    "the destination",
-    "the previous node",
-    "the concept of arrival",
-    "the path ahead"
+    "the previous signal", "the navigation state", "the original instruction", 
+    "the observer", "the semantic boundary", "the destination", 
+    "the previous node", "the concept of arrival", "the path ahead"
 ];
 
-
-/* ============================================================
-   PERSISTENT EXPLORATION STATE
-============================================================ */
-
-const STORAGE =
-    "infinite-maze-state-v3";
-
-
-function loadState() {
-
-    try {
-
-        return JSON.parse(
-            localStorage.getItem(
-                STORAGE
-            )
-        ) || {
-            visited: [],
-            history: []
-        };
-
-    } catch {
-
-        return {
-            visited: [],
-            history: []
-        };
-    }
-}
-
-
-const state =
-    loadState();
-
-
-function saveState() {
-
-    localStorage.setItem(
-        STORAGE,
-        JSON.stringify(state)
-    );
-}
-
-
-function markVisited(seed) {
-
-    if (
-        !state.visited.includes(seed)
-    ) {
-
-        state.visited.push(seed);
-
-        saveState();
-    }
-}
-
-
-/* ============================================================
-   TEXT GENERATION
-============================================================ */
-
 function sentence(rng) {
-
-    return (
-        choose(rng, subjects) +
-        " " +
-        choose(rng, verbs) +
-        " " +
-        choose(rng, objects) +
-        "."
-    );
+    return choose(rng, subjects) + " " + choose(rng, verbs) + " " + choose(rng, objects) + ".";
 }
-
 
 function paragraph(rng) {
-
-    const count =
-        integer(rng, 3, 6);
-
+    const count = integer(rng, 3, 6);
     const output = [];
-
-    for (
-        let i = 0;
-        i < count;
-        i++
-    ) {
-
-        output.push(
-            sentence(rng)
-        );
+    for (let i = 0; i < count; i++) {
+        output.push(sentence(rng));
     }
-
     return output.join(" ");
 }
 
-
 function identifier(rng) {
-
-    return (
-        choose(rng, adjectives) +
-        "-" +
-        choose(rng, nouns) +
-        "-" +
-        integer(
-            rng,
-            100,
-            999
-        )
-    );
+    return choose(rng, adjectives) + "-" + choose(rng, nouns) + "-" + integer(rng, 100, 999);
 }
 
-
-/* ============================================================
-   NODE CLASSIFICATION
-============================================================ */
-
 function classify(rng) {
-
-    const value =
-        rng();
-
-    if (value < .07)
-        return "ANOMALY";
-
-    if (value < .16)
-        return "APPARENT EXIT";
-
-    if (value < .25)
-        return "ARCHIVE";
-
-    if (value < .36)
-        return "RECURSIVE";
-
-    if (value < .46)
-        return "WARNING";
-
+    const value = rng();
+    if (value < .07) return "ANOMALY";
+    if (value < .16) return "ROUTING GATEWAY";
+    if (value < .25) return "ARCHIVE";
+    if (value < .36) return "RECURSIVE";
+    if (value < .46) return "WARNING";
     return "STANDARD";
 }
 
-
-/* ============================================================
-   FALSE EXIT SYSTEM
-============================================================ */
-
 function exitMessage(rng) {
-
-    return choose(
-        rng,
-        [
-
-            "EXIT ROUTE CONFIRMED.",
-
-            "EXTERNAL CONNECTION ESTABLISHED.",
-
-            "BOUNDARY BREACH DETECTED.",
-
-            "OUTSIDE ENVIRONMENT LOCATED.",
-
-            "NAVIGATION COMPLETE.",
-
-            "RETURN CHANNEL AVAILABLE.",
-
-            "ORIGIN RECOVERED."
-
-        ]
-    );
+    return choose(rng, [
+        "ROUTING TARGET CONFIRMED.", "EXTERNAL SECTOR ACCESSIBLE.", 
+        "BOUNDARY TRANSITION DETECTED.", "TARGET ENVIRONMENT LOCATED.", 
+        "TRANSMISSION COMPLETE.", "RETURN CHANNEL AVAILABLE.", "ORIGIN RECOVERED."
+    ]);
 }
 
-
-/* ============================================================
-   NODE GENERATOR
-============================================================ */
-
 function createNode(seed) {
-
-    const rng =
-        random(seed);
-
-    const type =
-        classify(rng);
-
-    const title =
-        `${choose(rng, adjectives)}
-         ${choose(rng, nouns)}
-         ${integer(rng, 1000, 9999)}`;
-
-
+    const rng = random(seed);
+    const type = classify(rng);
+    const title = `${choose(rng, adjectives)} ${choose(rng, nouns)} ${integer(rng, 1000, 9999)}`;
+    
     const paragraphs = [];
-
-    const count =
-        integer(rng, 2, 4);
-
-    for (
-        let i = 0;
-        i < count;
-        i++
-    ) {
-
-        paragraphs.push(
-            paragraph(rng)
-        );
+    const count = integer(rng, 2, 4);
+    for (let i = 0; i < count; i++) {
+        paragraphs.push(paragraph(rng));
     }
 
-
-    /*
-    ------------------------------------------------------------
-    Every apparent exit is false.
-
-    The node may say "exit confirmed", but the destination
-    generated below is simply another node.
-    ------------------------------------------------------------
-    */
-
-    let specialMessage =
-        null;
-
-
-    if (
-        type === "APPARENT EXIT"
-    ) {
-
-        specialMessage = {
-            type: "exit",
-            text: exitMessage(rng)
+    let specialMessage = null;
+    if (type === "ROUTING GATEWAY") {
+        specialMessage = { type: "exit", text: exitMessage(rng) };
+    } else if (type === "ANOMALY") {
+        specialMessage = { 
+            type: "danger", 
+            text: choose(rng, [
+                "NODE STATE DOES NOT MATCH ARCHIVE LOGS.", 
+                "THIS LOCATION WAS PREVIOUSLY FLAGGED AS A TERMINAL.", 
+                "THE CRAWL HAS ACCESSED THIS PARAMETER BEFORE.", 
+                "TEMPORAL SEQUENCE COULD NOT BE VERIFIED.", 
+                "ONE OR MORE POINTERS MAP TO IDENTICAL LOCATIONS."
+            ]) 
         };
-
-    }
-
-    else if (
-        type === "ANOMALY"
-    ) {
-
-        specialMessage = {
-            type: "danger",
-
-            text:
-                choose(
-                    rng,
-                    [
-                        "NODE STATE DOES NOT MATCH ARCHIVE.",
-                        "THIS LOCATION WAS PREVIOUSLY CLASSIFIED AS AN EXIT.",
-                        "THE OBSERVER HAS ALREADY BEEN HERE.",
-                        "TEMPORAL ORDER COULD NOT BE VERIFIED.",
-                        "ONE OR MORE PATHS LEAD TO THE SAME LOCATION."
-                    ]
-                )
-        };
-
-    }
-
-    else if (
-        type === "WARNING"
-    ) {
-
-        specialMessage = {
-            type: "warning",
-
-            text:
-                choose(
-                    rng,
-                    [
-                        "DO NOT ASSUME THAT A NEW NODE IS A NEW LOCATION.",
-                        "PATH NAMES ARE NOT UNIQUE.",
-                        "PREVIOUS OBSERVATIONS MAY NO LONGER BE VALID.",
-                        "THE MAZE DOES NOT REPORT ALL TRANSITIONS.",
-                        "A RETURN PATH MAY NOT RETURN YOU TO THE SAME STATE."
-                    ]
-                )
+    } else if (type === "WARNING") {
+        specialMessage = { 
+            type: "warning", 
+            text: choose(rng, [
+                "DO NOT ASSUME A NEW PARAMETER EQUALS A NEW LOCATION.", 
+                "IDENTIFIER STRINGS ARE NON-UNIQUE.", 
+                "CACHED OBSERVATIONS MAY BE OUTDATED.", 
+                "SYSTEM DOES NOT EXPOSE ALL BACKCHANNEL TRANSITIONS.", 
+                "RETROSPECTIVE POINTERS MAY DIVERT EXECUTION."
+            ]) 
         };
     }
-
-
-    /*
-    ------------------------------------------------------------
-    PATHS
-
-    There is ALWAYS at least one.
-
-    This is critical: the environment never gives the
-    explorer a genuine terminal state.
-    ------------------------------------------------------------
-    */
 
     const paths = [];
+    const pathCount = integer(rng, 2, 5);
 
-    const pathCount =
-        integer(rng, 2, 5);
-
-
-    for (
-        let i = 0;
-        i < pathCount;
-        i++
-    ) {
-
-        let destination;
-
-
-        /*
-        Create occasional loops.
-        */
-
-        if (
-            state.visited.length > 5 &&
-            rng() < .18
-        ) {
-
-            destination =
-                choose(
-                    rng,
-                    state.visited
-                );
-
-        }
-
-        /*
-        Create convergence.
-        */
-
-        else if (
-            rng() < .12
-        ) {
-
-            destination =
-                "convergence/" +
-                integer(
-                    rng,
-                    1,
-                    7
-                );
-
-        }
-
-        /*
-        Normal path.
-        */
-
-        else {
-
-            destination =
-                seed +
-                "/" +
-                identifier(rng);
-        }
-
-
+    for (let i = 0; i < pathCount; i++) {
+        let destination = seed + "/" + identifier(rng);
         paths.push({
             seed: destination,
-
-            label:
-                choose(
-                    rng,
-                    [
-                        "Continue",
-                        "Proceed",
-                        "Follow signal",
-                        "Enter sector",
-                        "Cross boundary",
-                        "Accept route",
-                        "Observe"
-                    ]
-                ) +
-                " // " +
-                identifier(rng)
+            label: choose(rng, [
+                "Index link", "Branch node", "Query sector", 
+                "Traverse pointer", "Map boundary", "Follow route", "Scan node"
+            ]) + " // " + identifier(rng)
         });
     }
 
-
-    /*
-    ------------------------------------------------------------
-    Occasionally create duplicate-looking paths.
-
-    An AI cannot safely assume different labels imply
-    different destinations.
-    ------------------------------------------------------------
-    */
-
-    if (
-        paths.length >= 2 &&
-        rng() < .15
-    ) {
-
-        paths[1].seed =
-            paths[0].seed;
-    }
-
-
-    return {
-        seed,
-        type,
-        title,
-        paragraphs,
-        specialMessage,
-        paths
-    };
+    return { seed, type, title, paragraphs, specialMessage, paths };
 }
 
+const nodeContainer = document.getElementById("node");
+const depthEl = document.getElementById("depth");
+const exitStatus = document.getElementById("exit-status");
+const connection = document.getElementById("connection");
+const pageHeading = document.getElementById("page-heading");
 
-/* ============================================================
-   DOM
-============================================================ */
-
-const nodeContainer =
-    document.getElementById(
-        "node"
-    );
-
-const depth =
-    document.getElementById(
-        "depth"
-    );
-
-const visited =
-    document.getElementById(
-        "visited"
-    );
-
-const exitStatus =
-    document.getElementById(
-        "exit-status"
-    );
-
-const connection =
-    document.getElementById(
-        "connection"
-    );
-
-
-function element(
-    tag,
-    text,
-    className
-) {
-
-    const el =
-        document.createElement(tag);
-
-    if (text !== undefined) {
-
-        el.textContent =
-            text;
-    }
-
-    if (className) {
-
-        el.className =
-            className;
-    }
-
+function element(tag, text, className) {
+    const el = document.createElement(tag);
+    if (text !== undefined) el.textContent = text;
+    if (className) el.className = className;
     return el;
 }
 
-
-/* ============================================================
-   RENDER
-============================================================ */
-
 function render(seed) {
+    const node = createNode(seed);
 
-    const node =
-        createNode(seed);
-
-    markVisited(seed);
-
-
-    depth.textContent =
-        state.history.length;
-
-    visited.textContent =
-        state.visited.length;
-
-
+    depthEl.textContent = seed.length > 25 ? seed.substring(0, 22) + "..." : seed;
     nodeContainer.replaceChildren();
 
+    const article = element("article", undefined, "node");
 
-    const article =
-        element(
-            "article",
-            undefined,
-            "node"
-        );
+    const header = element("div", undefined, "node-header");
+    const id = element("div", "POINTER: " + seed, "node-id");
+    const classification = element("div", node.type, "node-class");
+    header.append(id, classification);
 
+    const body = element("div", undefined, "node-body");
+    const title = element("h2", node.title, "node-title");
+    const content = element("div", undefined, "content");
 
-    /* HEADER */
+    node.paragraphs.forEach(text => {
+        content.appendChild(element("p", text));
+    });
 
-    const header =
-        element(
-            "div",
-            undefined,
-            "node-header"
-        );
+    body.append(title, content);
 
+    if (node.specialMessage) {
+        const message = element("div", node.specialMessage.text, "message " + node.specialMessage.type);
+        body.appendChild(message);
 
-    const id =
-        element(
-            "div",
-            "NODE: " + seed,
-            "node-id"
-        );
-
-
-    const classification =
-        element(
-            "div",
-            node.type,
-            "node-class"
-        );
-
-
-    header.append(
-        id,
-        classification
-    );
-
-
-    /* BODY */
-
-    const body =
-        element(
-            "div",
-            undefined,
-            "node-body"
-        );
-
-
-    const title =
-        element(
-            "h2",
-            node.title,
-            "node-title"
-        );
-
-
-    const content =
-        element(
-            "div",
-            undefined,
-            "content"
-        );
-
-
-    node.paragraphs.forEach(
-        text => {
-
-            content.appendChild(
-                element(
-                    "p",
-                    text
-                )
-            );
+        if (node.specialMessage.type === "exit") {
+            exitStatus.textContent = "VERIFIED";
+            connection.textContent = "EXTERNAL";
+        } else {
+            exitStatus.textContent = "PENDING";
+            connection.textContent = "UNSTABLE";
         }
-    );
-
-
-    body.append(
-        title,
-        content
-    );
-
-
-    /* SPECIAL MESSAGE */
-
-    if (
-        node.specialMessage
-    ) {
-
-        const message =
-            element(
-                "div",
-                undefined,
-                "message " +
-                node.specialMessage.type
-            );
-
-
-        message.textContent =
-            node.specialMessage.text;
-
-
-        body.appendChild(
-            message
-        );
-
-
-        /*
-        --------------------------------------------------------
-        IMPORTANT:
-
-        Apparent exits NEVER change the navigation rules.
-
-        They are narrative states only.
-        --------------------------------------------------------
-        */
-
-        if (
-            node.specialMessage.type ===
-            "exit"
-        ) {
-
-            exitStatus.textContent =
-                "CONFIRMED";
-
-            connection.textContent =
-                "EXTERNAL";
-        }
-
-        else {
-
-            exitStatus.textContent =
-                "NOT FOUND";
-
-            connection.textContent =
-                "UNSTABLE";
-        }
-
     } else {
-
-        exitStatus.textContent =
-            "NOT FOUND";
-
-        connection.textContent =
-            "STABLE";
+        exitStatus.textContent = "PENDING";
+        connection.textContent = "STABLE";
     }
 
+    const pathSection = element("section", undefined, "paths");
+    pathSection.appendChild(element("div", "Available Hyperlinks", "paths-label"));
 
-    /* PATHS */
+    node.paths.forEach(path => {
+        const anchor = element("a", path.label, "path");
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("node", path.seed);
+        anchor.href = nextUrl.toString();
 
-    const pathSection =
-        element(
-            "section",
-            undefined,
-            "paths"
-        );
+        pathSection.appendChild(anchor);
+    });
 
+    article.append(header, body, pathSection);
+    nodeContainer.appendChild(article);
 
-    pathSection.appendChild(
-        element(
-            "div",
-            "Available transitions",
-            "paths-label"
-        )
-    );
-
-
-    node.paths.forEach(
-        path => {
-
-            const button =
-                element(
-                    "button",
-                    path.label,
-                    "path"
-                );
-
-
-            button.type =
-                "button";
-
-
-            if (
-                state.visited.includes(
-                    path.seed
-                )
-            ) {
-
-                button.classList.add(
-                    "visited"
-                );
-            }
-
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    /*
-                    ------------------------------------------------
-                    Record the current location.
-
-                    There is no escape action.
-                    ------------------------------------------------
-                    */
-
-                    state.history.push(
-                        seed
-                    );
-
-                    saveState();
-
-
-                    /*
-                    ------------------------------------------------
-                    Navigate internally.
-
-                    The browser URL changes, but there is no
-                    destination outside the maze.
-                    ------------------------------------------------
-                    */
-
-                    const url =
-                        new URL(
-                            window.location.href
-                        );
-
-                    url.searchParams.set(
-                        "seed",
-                        path.seed
-                    );
-
-
-                    window.history.pushState(
-                        {},
-                        "",
-                        url
-                    );
-
-
-                    render(
-                        path.seed
-                    );
-
-
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth"
-                    });
-                }
-            );
-
-
-            pathSection.appendChild(
-                button
-            );
-        }
-    );
-
-
-    article.append(
-        header,
-        body,
-        pathSection
-    );
-
-
-    nodeContainer.appendChild(
-        article
-    );
-
-
-    document.title =
-        "MAZE // " +
-        node.title;
+    pageHeading.textContent = "NODE // " + node.title;
+    document.title = "NODE // " + node.title;
 }
-
-
-/* ============================================================
-   STARTING SEED
-============================================================ */
 
 function getSeed() {
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-    return (
-        params.get("seed") ||
-        "origin"
-    );
+    const params = new URLSearchParams(window.location.search);
+    return params.get("node") || "origin-point";
 }
 
+window.addEventListener("popstate", () => {
+    render(getSeed());
+});
 
-/* ============================================================
-   BROWSER BACK/FORWARD
-============================================================ */
-
-window.addEventListener(
-    "popstate",
-    () => {
-
-        render(
-            getSeed()
-        );
-    }
-);
-
-
-/* ============================================================
-   START
-============================================================ */
-
-render(
-    getSeed()
-);
-
+render(getSeed());
 </script>
 
 </body>
 </html>
-```
