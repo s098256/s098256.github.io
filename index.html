@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECTOR // 01</title>
+
+    <title>The Meridian Ledger</title>
+
     <style>
         :root {
-            --bg: #050706;
-            --panel: #090d0b;
-            --panel2: #0d1410;
-            --border: #1a2820;
-            --text: #8f9d94;
-            --muted: #3e4d45;
-            --green: #00ff66;
-            --green-dim: #008f3b;
-            --blue: #00bfff;
-            --red: #ff4050;
-            --yellow: #d6cc45;
-            --purple: #bb70ff;
+            --paper: #f7f5ef;
+            --paper-dark: #ece9e0;
+            --ink: #171717;
+            --muted: #696761;
+            --line: #c9c5bb;
+            --accent: #9d1c24;
+            --accent-dark: #74141b;
+            --white: #ffffff;
         }
 
         * {
@@ -25,485 +23,877 @@
         }
 
         html {
-            background: var(--bg);
+            background: var(--paper);
         }
 
         body {
             margin: 0;
-            min-height: 100vh;
-            padding: 24px;
-            background:
-                radial-gradient(
-                    circle at 50% 0%,
-                    rgba(0,255,102,.035),
-                    transparent 45%
-                ),
-                var(--bg);
-            color: var(--text);
-            font-family: "Courier New", Courier, monospace;
-            line-height: 1.7;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
         }
 
-        .maze {
-            width: min(850px, 100%);
+        a {
+            color: inherit;
+        }
+
+        .site {
+            width: min(1120px, calc(100% - 32px));
             margin: auto;
         }
 
-        .header {
-            margin-bottom: 24px;
-        }
+        /* HEADER */
 
-        .system-line {
+        .utility {
             display: flex;
             justify-content: space-between;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed var(--border);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--line);
             color: var(--muted);
-            font-size: 10px;
-            letter-spacing: .08em;
-        }
-
-        .live {
-            color: var(--green);
-        }
-
-        .title {
-            margin: 22px 0 3px;
-            color: var(--text);
-            font-size: clamp(16px, 3vw, 20px);
-            letter-spacing: .08em;
-        }
-
-        .subtitle {
-            color: var(--muted);
+            font-family: Arial, sans-serif;
             font-size: 11px;
+            letter-spacing: .03em;
         }
 
-        .node {
-            overflow: hidden;
-            margin-bottom: 20px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 4px;
+        .masthead {
+            padding: 25px 0 20px;
+            text-align: center;
+            border-bottom: 4px double var(--ink);
         }
 
-        .node-header {
+        .brand {
+            margin: 0;
+            font-size: clamp(38px, 7vw, 72px);
+            font-weight: normal;
+            letter-spacing: -.055em;
+        }
+
+        .edition {
+            margin-top: 6px;
+            color: var(--muted);
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        .navigation {
             display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 12px 15px;
-            background: var(--panel2);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .node-id {
-            overflow: hidden;
-            color: var(--green);
-            font-size: 11px;
-            text-overflow: ellipsis;
+            gap: 22px;
+            overflow-x: auto;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
             white-space: nowrap;
         }
 
-        .node-class {
-            flex-shrink: 0;
-            color: var(--purple);
-            font-size: 10px;
+        .navigation a {
+            text-decoration: none;
+        }
+
+        .navigation a:hover {
+            color: var(--accent);
+        }
+
+        /* BREAKING STRIP */
+
+        .breaking {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin: 18px 0;
+            padding: 8px 12px;
+            background: var(--accent);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .breaking-label {
+            letter-spacing: .08em;
+        }
+
+        /* ARTICLE */
+
+        .article-header {
+            max-width: 900px;
+            margin: 35px auto 25px;
+            text-align: center;
+        }
+
+        .section {
+            color: var(--accent);
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: .13em;
             text-transform: uppercase;
         }
 
-        .node-body {
-            padding: 20px;
-        }
-
-        .node-title {
-            margin: 0 0 20px;
-            color: #c4cec8;
-            font-size: 18px;
+        .headline {
+            margin: 10px 0;
+            font-size: clamp(36px, 6vw, 66px);
             font-weight: normal;
+            line-height: 1.02;
+            letter-spacing: -.035em;
         }
 
-        .content p {
-            margin: 0 0 15px;
+        .dek {
+            max-width: 760px;
+            margin: 15px auto;
+            color: #4c4a46;
+            font-size: 19px;
+            line-height: 1.45;
         }
 
-        .content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .message {
-            margin: 20px 0;
-            padding: 12px 15px;
-            background: rgba(255,255,255,.01);
-            border-left: 2px solid var(--green);
-            color: #718078;
+        .byline {
+            margin-top: 20px;
+            color: var(--muted);
+            font-family: Arial, sans-serif;
             font-size: 11px;
         }
 
-        .message.warning {
-            border-color: var(--yellow);
-            color: #928c4c;
+        .article {
+            display: grid;
+            grid-template-columns: minmax(0, 760px) 270px;
+            gap: 40px;
+            margin-bottom: 45px;
         }
 
-        .message.danger {
-            border-color: var(--red);
-            color: #a45c64;
+        .article-body {
+            font-size: 18px;
+            line-height: 1.7;
         }
 
-        .message.exit {
-            border-color: var(--green);
-            color: var(--green);
-            background: rgba(0,255,102,.025);
+        .article-body p {
+            margin: 0 0 22px;
         }
 
-        .paths {
-            padding: 18px 20px;
-            border-top: 1px dashed var(--border);
+        .dropcap::first-letter {
+            float: left;
+            margin: 7px 8px 0 0;
+            font-size: 62px;
+            line-height: .8;
+            color: var(--accent);
         }
 
-        .paths-label {
-            margin-bottom: 10px;
-            color: var(--muted);
-            font-size: 10px;
-            letter-spacing: .15em;
+        .notice {
+            margin: 25px 0;
+            padding: 15px 18px;
+            background: var(--paper-dark);
+            border-left: 4px solid var(--accent);
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            border-top: 3px solid var(--ink);
+        }
+
+        .sidebar-title {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: .08em;
             text-transform: uppercase;
         }
 
-        .path {
+        .story-link {
             display: block;
-            width: 100%;
-            margin: 5px 0;
-            padding: 10px 12px;
-            color: var(--blue);
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 3px;
-            font: inherit;
-            font-size: 12px;
-            text-align: left;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--line);
             text-decoration: none;
-            cursor: pointer;
-            transition: background .12s, border-color .12s, transform .12s;
         }
 
-        .path:hover,
-        .path:focus-visible {
-            background: var(--panel2);
-            border-color: var(--border);
-            transform: translateX(4px);
-            outline: none;
+        .story-link:hover .story-title {
+            color: var(--accent);
         }
 
-        .path::before {
-            content: "→";
-            margin-right: 10px;
-            color: var(--green-dim);
+        .story-number {
+            color: var(--accent);
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            font-weight: bold;
         }
 
-        .telemetry {
+        .story-title {
+            margin-top: 4px;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .story-meta {
+            margin-top: 6px;
+            color: var(--muted);
+            font-family: Arial, sans-serif;
+            font-size: 9px;
+        }
+
+        /* RELATED */
+
+        .related {
+            margin: 30px 0 60px;
+            border-top: 3px solid var(--ink);
+        }
+
+        .related-heading {
+            padding: 12px 0;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .related-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
+            border-top: 1px solid var(--line);
         }
 
-        .telemetry-box {
-            padding: 10px;
-            background: var(--panel);
-            border: 1px solid var(--border);
+        .related-card {
+            min-height: 150px;
+            padding: 18px;
+            border-right: 1px solid var(--line);
+            text-decoration: none;
         }
 
-        .telemetry-label {
-            color: var(--muted);
+        .related-card:last-child {
+            border-right: 0;
+        }
+
+        .related-card:hover {
+            background: var(--paper-dark);
+        }
+
+        .related-category {
+            color: var(--accent);
+            font-family: Arial, sans-serif;
             font-size: 9px;
+            font-weight: bold;
             text-transform: uppercase;
         }
 
-        .telemetry-value {
-            margin-top: 3px;
-            color: var(--text);
-            font-size: 13px;
+        .related-title {
+            margin-top: 8px;
+            font-size: 21px;
+            line-height: 1.2;
+        }
+
+        .related-time {
+            margin-top: 12px;
+            color: var(--muted);
+            font-family: Arial, sans-serif;
+            font-size: 9px;
         }
 
         footer {
-            margin-top: 30px;
-            color: #202b25;
-            font-size: 9px;
+            padding: 25px 0 45px;
+            border-top: 4px double var(--ink);
+            color: var(--muted);
+            font-family: Arial, sans-serif;
+            font-size: 10px;
             text-align: center;
-            letter-spacing: .1em;
+        }
+
+        @media (max-width: 800px) {
+            .article {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                margin-top: 10px;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .related-card {
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+            }
         }
 
         @media (max-width: 600px) {
-            body { padding: 12px; }
-            .telemetry { grid-template-columns: 1fr; }
-            .node-body { padding: 15px; }
+            .site {
+                width: min(100% - 20px, 1120px);
+            }
+
+            .headline {
+                font-size: 39px;
+            }
+
+            .dek {
+                font-size: 17px;
+            }
+
+            .article-body {
+                font-size: 17px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="maze">
-    <header class="header">
-        <div class="system-line">
-            <span>STATUS: <span class="live">ACTIVE</span></span>
-            <span>NODE ACCESS: <span id="connection">LOCAL</span></span>
+<div class="site">
+
+    <div class="utility">
+        <span id="date">WEDNESDAY, SEPTEMBER 16, 2026</span>
+        <span>Independent reporting · Digital edition</span>
+    </div>
+
+    <header class="masthead">
+        <h1 class="brand">The Meridian Ledger</h1>
+        <div class="edition">
+            National · World · Science · Culture · Business
         </div>
-        <div class="title" id="page-heading">SUB-ROUTINE TERMINAL</div>
-        <div class="subtitle">Standard diagnostic logging node.</div>
     </header>
 
-    <section class="telemetry">
-        <div class="telemetry-box">
-            <div class="telemetry-label">Node Vector</div>
-            <div class="telemetry-value" id="depth">-</div>
-        </div>
-        <div class="telemetry-box">
-            <div class="telemetry-label">Environment</div>
-            <div class="telemetry-value" id="visited">ONLINE</div>
-        </div>
-        <div class="telemetry-box">
-            <div class="telemetry-label">Route Status</div>
-            <div class="telemetry-value" id="exit-status">PENDING</div>
-        </div>
-    </section>
+    <nav class="navigation">
+        <a href="?section=latest">Latest</a>
+        <a href="?section=politics">Politics</a>
+        <a href="?section=world">World</a>
+        <a href="?section=science">Science</a>
+        <a href="?section=technology">Technology</a>
+        <a href="?section=business">Business</a>
+        <a href="?section=culture">Culture</a>
+        <a href="?section=archive">Archive</a>
+    </nav>
 
-    <main id="node"></main>
+    <div class="breaking">
+        <span class="breaking-label">LATEST</span>
+        <span id="ticker">
+            New developments continue to reshape the day's news cycle.
+        </span>
+    </div>
+
+    <main>
+
+        <header class="article-header">
+            <div class="section" id="section">SCIENCE & TECHNOLOGY</div>
+
+            <h2 class="headline" id="headline">
+                Loading report...
+            </h2>
+
+            <div class="dek" id="dek">
+                Preparing the latest edition.
+            </div>
+
+            <div class="byline" id="byline">
+                By The Meridian Ledger Staff · Updated recently
+            </div>
+        </header>
+
+        <div class="article">
+
+            <article class="article-body" id="article-body">
+            </article>
+
+            <aside class="sidebar">
+                <div class="sidebar-title">More Coverage</div>
+                <div id="sidebar-links"></div>
+            </aside>
+
+        </div>
+
+        <section class="related">
+            <div class="related-heading">Related Stories</div>
+            <div class="related-grid" id="related"></div>
+        </section>
+
+    </main>
 
     <footer>
-        LOGGING ACTIVE. RECORDING TRANSMISSION STATES.
+        THE MERIDIAN LEDGER · DIGITAL EDITION<br>
+        Reporting the world as it develops.
     </footer>
+
 </div>
 
 <script>
 "use strict";
 
+/*
+ * The content below is procedurally generated from the URL.
+ * The same URL always produces the same article.
+ */
+
 function hashString(value) {
     let hash = 2166136261;
+
     for (let i = 0; i < value.length; i++) {
         hash ^= value.charCodeAt(i);
         hash = Math.imul(hash, 16777619);
     }
+
     return hash >>> 0;
 }
 
 function random(seed) {
     let value = hashString(seed);
+
     return function () {
         value += 0x6D2B79F5;
+
         let t = value;
+
         t = Math.imul(t ^ (t >>> 15), t | 1);
         t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
 }
 
 function integer(rng, min, max) {
-    return Math.floor(rng() * (max - min + 1)) + min;
+    return Math.floor(
+        rng() * (max - min + 1)
+    ) + min;
 }
 
 function choose(rng, array) {
-    return array[Math.floor(rng() * array.length)];
+    return array[
+        Math.floor(rng() * array.length)
+    ];
 }
 
-const adjectives = [
-    "QUANTUM", "RECURSIVE", "SYNTHETIC", "LATENT", "TEMPORAL", 
-    "PERIPHERAL", "SEMANTIC", "DISTRIBUTED", "OBSOLETE", "ANISOTROPIC", 
-    "FRACTAL", "EXTERNAL", "UNVERIFIED", "NULL"
-];
 
-const nouns = [
-    "VECTOR", "ARCHIVE", "PROTOCOL", "MATRIX", "SECTOR", 
-    "CHAMBER", "SIGNAL", "BOUNDARY", "INSTANCE", "PROCESS", "CHANNEL", "LAYER"
+/* CONTENT */
+
+const sections = [
+    "Science & Technology",
+    "World",
+    "Business",
+    "Culture",
+    "Environment",
+    "Public Affairs",
+    "Cities",
+    "Research"
 ];
 
 const subjects = [
-    "The distributed system", "The archive", "The previous observer", 
-    "The navigation protocol", "The peripheral intelligence", "The original transmission", 
-    "The node", "The system", "The recursive process"
+    "researchers",
+    "officials",
+    "local authorities",
+    "industry analysts",
+    "independent experts",
+    "archivists",
+    "university researchers",
+    "regional observers",
+    "public agencies"
 ];
 
 const verbs = [
-    "re-contextualizes", "duplicates", "obscures", "aggregates", 
-    "reconstructs", "fragments", "anticipates", "preserves", 
-    "contradicts", "replaces", "forgets"
+    "have begun examining",
+    "are continuing to investigate",
+    "have documented",
+    "are studying",
+    "reported new findings concerning",
+    "released additional information about",
+    "have raised new questions about",
+    "are tracking developments surrounding"
 ];
 
 const objects = [
-    "the previous signal", "the navigation state", "the original instruction", 
-    "the observer", "the semantic boundary", "the destination", 
-    "the previous node", "the concept of arrival", "the path ahead"
+    "a previously overlooked pattern",
+    "a change in regional conditions",
+    "a newly identified system",
+    "an unusual series of events",
+    "a long-running research project",
+    "a significant shift in public activity",
+    "a collection of previously separate records",
+    "an emerging development"
 ];
 
+const headlineStarts = [
+    "New Findings Raise Questions About",
+    "Researchers Examine",
+    "Officials Review",
+    "A Growing Investigation Focuses On",
+    "New Report Details",
+    "What We Know About",
+    "Experts Track Changes In",
+    "Study Offers New View Of",
+    "Records Reveal More About",
+    "The Latest Developments In"
+];
+
+const headlineEnds = [
+    "A System Few Had Noticed",
+    "A Rapidly Changing Landscape",
+    "The Region's Unusual Pattern",
+    "An Expanding Research Effort",
+    "A Decades-Old Question",
+    "The Technology Behind the Change",
+    "A Complicated Chain of Events",
+    "The Data Emerging This Week",
+    "A Shift With Wider Consequences",
+    "An Archive Under New Review"
+];
+
+const locations = [
+    "across several regions",
+    "in communities around the country",
+    "within a growing network of institutions",
+    "across the northern corridor",
+    "in several major research centers",
+    "throughout the affected area",
+    "among organizations monitoring the issue"
+];
+
+const names = [
+    "Mara Ellison",
+    "Daniel Reeves",
+    "Helen Ward",
+    "Jonas Mercer",
+    "Clara Bennett",
+    "Samuel Ortiz",
+    "Nora Fields",
+    "Adrian Cole"
+];
+
+const tickerLines = [
+    "Officials release additional details as investigation continues.",
+    "Researchers publish new data from an ongoing study.",
+    "New records add context to a developing story.",
+    "Authorities say the review remains ongoing.",
+    "Experts examine the broader implications of the latest findings."
+];
+
+
+/* TEXT GENERATION */
+
 function sentence(rng) {
-    return choose(rng, subjects) + " " + choose(rng, verbs) + " " + choose(rng, objects) + ".";
+    return (
+        choose(rng, subjects) + " " +
+        choose(rng, verbs) + " " +
+        choose(rng, objects) + " " +
+        choose(rng, locations) + "."
+    );
 }
 
 function paragraph(rng) {
-    const count = integer(rng, 3, 6);
-    const output = [];
+    const count = integer(rng, 3, 5);
+    const sentences = [];
+
     for (let i = 0; i < count; i++) {
-        output.push(sentence(rng));
+        sentences.push(sentence(rng));
     }
-    return output.join(" ");
+
+    return sentences.join(" ");
 }
 
-function identifier(rng) {
-    return choose(rng, adjectives) + "-" + choose(rng, nouns) + "-" + integer(rng, 100, 999);
+function makeHeadline(rng) {
+    return (
+        choose(rng, headlineStarts) +
+        " " +
+        choose(rng, headlineEnds)
+    );
 }
 
-function classify(rng) {
-    const value = rng();
-    if (value < .07) return "ANOMALY";
-    if (value < .16) return "ROUTING GATEWAY";
-    if (value < .25) return "ARCHIVE";
-    if (value < .36) return "RECURSIVE";
-    if (value < .46) return "WARNING";
-    return "STANDARD";
+function makeDek(rng) {
+    return (
+        "A developing report brings together new observations, " +
+        "historical records and analysis as researchers and officials " +
+        "continue to examine what the latest information may reveal."
+    );
 }
 
-function exitMessage(rng) {
-    return choose(rng, [
-        "ROUTING TARGET CONFIRMED.", "EXTERNAL SECTOR ACCESSIBLE.", 
-        "BOUNDARY TRANSITION DETECTED.", "TARGET ENVIRONMENT LOCATED.", 
-        "TRANSMISSION COMPLETE.", "RETURN CHANNEL AVAILABLE.", "ORIGIN RECOVERED."
-    ]);
+
+/* URL / STORY GENERATION */
+
+function makeSlug(rng) {
+    const words = [
+        "new-report",
+        "latest-findings",
+        "research-update",
+        "developing-story",
+        "investigation",
+        "analysis",
+        "new-records",
+        "regional-update",
+        "research",
+        "explainer"
+    ];
+
+    return choose(rng, words) +
+        "-" +
+        integer(rng, 100, 999);
 }
 
-function createNode(seed) {
+function makeDestination(seed, rng) {
+    return seed + "/" + makeSlug(rng);
+}
+
+function makeArticle(seed) {
+
     const rng = random(seed);
-    const type = classify(rng);
-    const title = `${choose(rng, adjectives)} ${choose(rng, nouns)} ${integer(rng, 1000, 9999)}`;
-    
-    const paragraphs = [];
-    const count = integer(rng, 2, 4);
-    for (let i = 0; i < count; i++) {
-        paragraphs.push(paragraph(rng));
+
+    const article = {
+        section: choose(rng, sections),
+        headline: makeHeadline(rng),
+        dek: makeDek(rng),
+        author: choose(rng, names),
+        paragraphs: [],
+        related: [],
+        sidebar: []
+    };
+
+    const paragraphCount = integer(rng, 5, 9);
+
+    for (let i = 0; i < paragraphCount; i++) {
+        article.paragraphs.push(
+            paragraph(rng)
+        );
     }
 
-    let specialMessage = null;
-    if (type === "ROUTING GATEWAY") {
-        specialMessage = { type: "exit", text: exitMessage(rng) };
-    } else if (type === "ANOMALY") {
-        specialMessage = { 
-            type: "danger", 
-            text: choose(rng, [
-                "NODE STATE DOES NOT MATCH ARCHIVE LOGS.", 
-                "THIS LOCATION WAS PREVIOUSLY FLAGGED AS A TERMINAL.", 
-                "THE CRAWL HAS ACCESSED THIS PARAMETER BEFORE.", 
-                "TEMPORAL SEQUENCE COULD NOT BE VERIFIED.", 
-                "ONE OR MORE POINTERS MAP TO IDENTICAL LOCATIONS."
-            ]) 
-        };
-    } else if (type === "WARNING") {
-        specialMessage = { 
-            type: "warning", 
-            text: choose(rng, [
-                "DO NOT ASSUME A NEW PARAMETER EQUALS A NEW LOCATION.", 
-                "IDENTIFIER STRINGS ARE NON-UNIQUE.", 
-                "CACHED OBSERVATIONS MAY BE OUTDATED.", 
-                "SYSTEM DOES NOT EXPOSE ALL BACKCHANNEL TRANSITIONS.", 
-                "RETROSPECTIVE POINTERS MAY DIVERT EXECUTION."
-            ]) 
-        };
-    }
+    const sidebarCount = integer(rng, 4, 6);
 
-    const paths = [];
-    const pathCount = integer(rng, 2, 5);
-
-    for (let i = 0; i < pathCount; i++) {
-        let destination = seed + "/" + identifier(rng);
-        paths.push({
-            seed: destination,
-            label: choose(rng, [
-                "Index link", "Branch node", "Query sector", 
-                "Traverse pointer", "Map boundary", "Follow route", "Scan node"
-            ]) + " // " + identifier(rng)
+    for (let i = 0; i < sidebarCount; i++) {
+        article.sidebar.push({
+            title: makeHeadline(rng),
+            seed: makeDestination(seed, rng)
         });
     }
 
-    return { seed, type, title, paragraphs, specialMessage, paths };
-}
+    const relatedCount = 3;
 
-const nodeContainer = document.getElementById("node");
-const depthEl = document.getElementById("depth");
-const exitStatus = document.getElementById("exit-status");
-const connection = document.getElementById("connection");
-const pageHeading = document.getElementById("page-heading");
-
-function element(tag, text, className) {
-    const el = document.createElement(tag);
-    if (text !== undefined) el.textContent = text;
-    if (className) el.className = className;
-    return el;
-}
-
-function render(seed) {
-    const node = createNode(seed);
-
-    depthEl.textContent = seed.length > 25 ? seed.substring(0, 22) + "..." : seed;
-    nodeContainer.replaceChildren();
-
-    const article = element("article", undefined, "node");
-
-    const header = element("div", undefined, "node-header");
-    const id = element("div", "POINTER: " + seed, "node-id");
-    const classification = element("div", node.type, "node-class");
-    header.append(id, classification);
-
-    const body = element("div", undefined, "node-body");
-    const title = element("h2", node.title, "node-title");
-    const content = element("div", undefined, "content");
-
-    node.paragraphs.forEach(text => {
-        content.appendChild(element("p", text));
-    });
-
-    body.append(title, content);
-
-    if (node.specialMessage) {
-        const message = element("div", node.specialMessage.text, "message " + node.specialMessage.type);
-        body.appendChild(message);
-
-        if (node.specialMessage.type === "exit") {
-            exitStatus.textContent = "VERIFIED";
-            connection.textContent = "EXTERNAL";
-        } else {
-            exitStatus.textContent = "PENDING";
-            connection.textContent = "UNSTABLE";
-        }
-    } else {
-        exitStatus.textContent = "PENDING";
-        connection.textContent = "STABLE";
+    for (let i = 0; i < relatedCount; i++) {
+        article.related.push({
+            title: makeHeadline(rng),
+            section: choose(rng, sections),
+            seed: makeDestination(seed, rng)
+        });
     }
 
-    const pathSection = element("section", undefined, "paths");
-    pathSection.appendChild(element("div", "Available Hyperlinks", "paths-label"));
+    article.ticker = choose(rng, tickerLines);
 
-    node.paths.forEach(path => {
-        const anchor = element("a", path.label, "path");
-        const nextUrl = new URL(window.location.href);
-        nextUrl.searchParams.set("node", path.seed);
-        anchor.href = nextUrl.toString();
-
-        pathSection.appendChild(anchor);
-    });
-
-    article.append(header, body, pathSection);
-    nodeContainer.appendChild(article);
-
-    pageHeading.textContent = "NODE // " + node.title;
-    document.title = "NODE // " + node.title;
+    return article;
 }
+
+
+/* DOM HELPERS */
+
+function element(tag, text, className) {
+
+    const node = document.createElement(tag);
+
+    if (text !== undefined) {
+        node.textContent = text;
+    }
+
+    if (className) {
+        node.className = className;
+    }
+
+    return node;
+}
+
+function linkFor(seed) {
+
+    const url = new URL(
+        window.location.href
+    );
+
+    url.search = "";
+    url.searchParams.set(
+        "story",
+        seed
+    );
+
+    return url.toString();
+}
+
+
+/* RENDER */
+
+function render(seed) {
+
+    const article = makeArticle(seed);
+
+    document.title =
+        article.headline +
+        " | The Meridian Ledger";
+
+    document.getElementById("section")
+        .textContent =
+        article.section;
+
+    document.getElementById("headline")
+        .textContent =
+        article.headline;
+
+    document.getElementById("dek")
+        .textContent =
+        article.dek;
+
+    document.getElementById("byline")
+        .textContent =
+        "By " +
+        article.author +
+        " · Updated " +
+        integer(random(seed + "-time"), 1, 8) +
+        " hours ago";
+
+    document.getElementById("ticker")
+        .textContent =
+        article.ticker;
+
+
+    /* ARTICLE BODY */
+
+    const body =
+        document.getElementById("article-body");
+
+    body.replaceChildren();
+
+    article.paragraphs.forEach(
+        (text, index) => {
+
+            const p =
+                element("p", text);
+
+            if (index === 0) {
+                p.className = "dropcap";
+            }
+
+            body.appendChild(p);
+        }
+    );
+
+
+    /* SIDEBAR */
+
+    const sidebar =
+        document.getElementById("sidebar-links");
+
+    sidebar.replaceChildren();
+
+    article.sidebar.forEach(
+        (story, index) => {
+
+            const a =
+                element(
+                    "a",
+                    undefined,
+                    "story-link"
+                );
+
+            a.href =
+                linkFor(story.seed);
+
+            const number =
+                element(
+                    "div",
+                    String(index + 1).padStart(2, "0"),
+                    "story-number"
+                );
+
+            const title =
+                element(
+                    "div",
+                    story.title,
+                    "story-title"
+                );
+
+            const meta =
+                element(
+                    "div",
+                    "CONTINUING COVERAGE",
+                    "story-meta"
+                );
+
+            a.append(
+                number,
+                title,
+                meta
+            );
+
+            sidebar.appendChild(a);
+        }
+    );
+
+
+    /* RELATED STORIES */
+
+    const related =
+        document.getElementById("related");
+
+    related.replaceChildren();
+
+    article.related.forEach(
+        story => {
+
+            const a =
+                element(
+                    "a",
+                    undefined,
+                    "related-card"
+                );
+
+            a.href =
+                linkFor(story.seed);
+
+            const category =
+                element(
+                    "div",
+                    story.section,
+                    "related-category"
+                );
+
+            const title =
+                element(
+                    "div",
+                    story.title,
+                    "related-title"
+                );
+
+            const time =
+                element(
+                    "div",
+                    "UPDATED TODAY",
+                    "related-time"
+                );
+
+            a.append(
+                category,
+                title,
+                time
+            );
+
+            related.appendChild(a);
+        }
+    );
+}
+
+
+/* INITIAL STATE */
 
 function getSeed() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("node") || "origin-point";
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    return (
+        params.get("story") ||
+        "homepage"
+    );
 }
 
-window.addEventListener("popstate", () => {
-    render(getSeed());
-});
-
 render(getSeed());
+
 </script>
 
 </body>
