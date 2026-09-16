@@ -1,33 +1,29 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="description"
-        content="An endlessly generated maze of strange digital nodes."
-    >
-
-    <title>The Infinite Maze</title>
+    <title>THE INFINITE MAZE</title>
 
     <style>
         :root {
-            --bg: #080b0a;
-            --surface: #0d1210;
-            --surface-hover: #121a16;
-            --border: #1b2a22;
-            --text: #9ba8a1;
-            --muted: #526058;
-            --green: #00ff66;
-            --green-dim: #00a844;
-            --blue: #00bcff;
-            --magenta: #ff00cc;
+            --bg: #050706;
+            --panel: #090d0b;
+            --panel2: #0d1410;
+            --border: #1a2820;
 
-            --glow-green:
-                0 0 12px rgba(0, 255, 102, 0.25);
-            --glow-blue:
-                0 0 12px rgba(0, 188, 255, 0.2);
+            --text: #8f9d94;
+            --muted: #3e4d45;
+
+            --green: #00ff66;
+            --green-dim: #008f3b;
+
+            --blue: #00bfff;
+            --red: #ff4050;
+            --yellow: #d6cc45;
+            --purple: #bb70ff;
         }
 
         * {
@@ -35,23 +31,24 @@
         }
 
         html {
-            scroll-behavior: smooth;
+            background: var(--bg);
         }
 
         body {
-            min-height: 100vh;
             margin: 0;
-            padding: 2rem 1.25rem;
+            min-height: 100vh;
+            padding: 24px;
 
             background:
                 radial-gradient(
                     circle at 50% 0%,
-                    rgba(0, 255, 102, 0.04),
-                    transparent 35%
+                    rgba(0,255,102,.035),
+                    transparent 45%
                 ),
                 var(--bg);
 
             color: var(--text);
+
             font-family:
                 "Courier New",
                 Courier,
@@ -60,607 +57,1422 @@
             line-height: 1.7;
         }
 
-        ::selection {
-            color: #000;
-            background: var(--green);
+        .maze {
+            width: min(850px, 100%);
+            margin: auto;
         }
 
-        .page {
-            width: min(800px, 100%);
-            margin: 0 auto;
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            margin-bottom: 24px;
         }
 
-        .meta {
+        .system-line {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            justify-content: space-between;
 
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-
-            color: var(--muted);
-            font-size: 0.75rem;
+            padding-bottom: 10px;
 
             border-bottom: 1px dashed var(--border);
+
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: .08em;
         }
 
-        .status {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: var(--glow-green);
-
-            animation: pulse 2s infinite;
+        .live {
+            color: var(--green);
         }
 
-        h1 {
-            margin: 0 0 1.5rem;
+        .title {
+            margin: 22px 0 3px;
 
             color: var(--green);
-            font-size: clamp(1.25rem, 4vw, 1.75rem);
-            font-weight: 700;
-            letter-spacing: 0.05em;
 
-            text-shadow: var(--glow-green);
+            font-size: clamp(
+                21px,
+                5vw,
+                30px
+            );
+
+            letter-spacing: .08em;
+
+            text-shadow:
+                0 0 14px
+                rgba(0,255,102,.2);
         }
 
-        .content {
-            margin-bottom: 2.5rem;
+        .subtitle {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* =====================================================
+           NODE
+        ===================================================== */
+
+        .node {
+            overflow: hidden;
+
+            margin-bottom: 20px;
+
+            background: var(--panel);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 4px;
+        }
+
+        .node-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+
+            padding: 12px 15px;
+
+            background: var(--panel2);
+
+            border-bottom:
+                1px solid
+                var(--border);
+        }
+
+        .node-id {
+            overflow: hidden;
+
+            color: var(--green);
+
+            font-size: 11px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .node-class {
+            flex-shrink: 0;
+
+            color: var(--purple);
+
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .node-body {
+            padding: 20px;
+        }
+
+        .node-title {
+            margin: 0 0 20px;
+
+            color: #c4cec8;
+
+            font-size: 18px;
+            font-weight: normal;
         }
 
         .content p {
-            margin: 0 0 1.25rem;
-            text-align: left;
+            margin: 0 0 15px;
         }
 
         .content p:last-child {
             margin-bottom: 0;
         }
 
-        .links-container {
-            padding-top: 1.25rem;
-            border-top: 1px dashed var(--border);
+        /* =====================================================
+           SYSTEM MESSAGES
+        ===================================================== */
+
+        .message {
+            margin: 20px 0;
+            padding: 12px 15px;
+
+            background:
+                rgba(255,255,255,.01);
+
+            border-left: 2px solid
+                var(--green);
+
+            color: #718078;
+
+            font-size: 11px;
         }
 
-        .links-container h2 {
-            margin: 0 0 1rem;
+        .message.warning {
+            border-color: var(--yellow);
+            color: #928c4c;
+        }
+
+        .message.danger {
+            border-color: var(--red);
+            color: #a45c64;
+        }
+
+        .message.exit {
+            border-color: var(--green);
+
+            color: var(--green);
+
+            background:
+                rgba(0,255,102,.025);
+        }
+
+        /* =====================================================
+           PATHS
+        ===================================================== */
+
+        .paths {
+            padding: 18px 20px;
+
+            border-top:
+                1px dashed
+                var(--border);
+        }
+
+        .paths-label {
+            margin-bottom: 10px;
 
             color: var(--muted);
-            font-size: 0.8rem;
-            font-weight: normal;
+
+            font-size: 10px;
+            letter-spacing: .15em;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
         }
 
-        #page-links {
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        .node-link {
+        .path {
             display: block;
 
-            padding: 0.65rem 0.8rem;
+            width: 100%;
+
+            margin: 5px 0;
+            padding: 10px 12px;
 
             color: var(--blue);
-            text-decoration: none;
-
-            border: 1px solid transparent;
-            border-radius: 4px;
-
-            transition:
-                color 120ms ease,
-                background 120ms ease,
-                border-color 120ms ease,
-                transform 120ms ease;
-        }
-
-        .node-link:hover,
-        .node-link:focus-visible {
-            color: var(--magenta);
-            background: var(--surface-hover);
-            border-color: var(--border);
-            transform: translateX(4px);
-            outline: none;
-        }
-
-        .node-link::before {
-            content: "↳ ";
-            color: var(--green-dim);
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-
-            border-top: 1px dashed var(--border);
-        }
-
-        button {
-            padding: 0.5rem 0.75rem;
-
-            color: var(--muted);
             background: transparent;
 
-            font: inherit;
-            font-size: 0.75rem;
+            border:
+                1px solid
+                transparent;
 
-            border: 1px solid var(--border);
-            border-radius: 4px;
+            border-radius: 3px;
+
+            font: inherit;
+            font-size: 12px;
+
+            text-align: left;
 
             cursor: pointer;
 
             transition:
-                color 120ms ease,
-                border-color 120ms ease,
-                background 120ms ease;
+                background .12s,
+                border-color .12s,
+                transform .12s;
         }
 
-        button:hover,
-        button:focus-visible {
-            color: var(--green);
-            border-color: var(--green-dim);
-            background: var(--surface);
+        .path:hover,
+        .path:focus-visible {
+            background: var(--panel2);
+
+            border-color:
+                var(--border);
+
+            transform:
+                translateX(4px);
+
             outline: none;
         }
 
-        .footer {
-            margin-top: 2rem;
+        .path::before {
+            content: "→";
 
-            color: #29352f;
-            font-size: 0.65rem;
+            margin-right: 10px;
+
+            color:
+                var(--green-dim);
+        }
+
+        .path.visited {
+            color: #596860;
+        }
+
+        .path.visited::after {
+            content: " [SEEN]";
+
+            color: #35423b;
+
+            font-size: 9px;
+        }
+
+        /* =====================================================
+           EXPLORATION DATA
+        ===================================================== */
+
+        .telemetry {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 8px;
+
+            margin-bottom: 20px;
+        }
+
+        .telemetry-box {
+            padding: 10px;
+
+            background:
+                var(--panel);
+
+            border:
+                1px solid
+                var(--border);
+        }
+
+        .telemetry-label {
+            color: var(--muted);
+
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+
+        .telemetry-value {
+            margin-top: 3px;
+
+            color: var(--text);
+
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            margin-top: 30px;
+
+            color: #202b25;
+
+            font-size: 9px;
+
             text-align: center;
-        }
 
-        .error {
-            color: #ff5f5f;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 0.4;
-            }
-
-            50% {
-                opacity: 1;
-            }
+            letter-spacing: .1em;
         }
 
         @media (max-width: 600px) {
+
             body {
-                padding: 1.25rem 1rem;
+                padding: 12px;
             }
 
-            .content p {
-                text-align: left;
+            .telemetry {
+                grid-template-columns: 1fr;
             }
 
-            .node-link {
-                padding: 0.75rem;
+            .node-body {
+                padding: 15px;
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
 
-            *,
-            *::before,
-            *::after {
-                animation: none !important;
+            * {
                 transition: none !important;
             }
         }
     </style>
 </head>
 
+
 <body>
-    <main class="page">
 
-        <div class="meta">
-            <span class="status" aria-hidden="true"></span>
-            <span>NODE:</span>
-            <span id="node-id">root_origin</span>
+<div class="maze">
+
+    <header class="header">
+
+        <div class="system-line">
+
+            <span>
+                SYSTEM:
+                <span class="live">
+                    ONLINE
+                </span>
+            </span>
+
+            <span>
+                CONNECTION:
+                <span id="connection">
+                    STABLE
+                </span>
+            </span>
+
         </div>
 
-        <h1 id="page-title">Connecting...</h1>
-
-        <section
-            class="content"
-            id="page-content"
-            aria-live="polite"
-        >
-            Loading reality...
-        </section>
-
-        <nav
-            class="links-container"
-            aria-label="Available nodes"
-        >
-            <h2>Proceed to:</h2>
-            <div id="page-links"></div>
-        </nav>
-
-        <div class="controls">
-            <button id="random-node" type="button">
-                Random Node
-            </button>
-
-            <button id="root-node" type="button">
-                Return to Origin
-            </button>
+        <div class="title">
+            THE INFINITE MAZE
         </div>
 
-        <footer class="footer">
-            THERE IS NO FINAL NODE
-        </footer>
-    </main>
+        <div class="subtitle">
+            Navigation system operational.
+        </div>
 
-    <script>
-        "use strict";
+    </header>
 
-        /* ---------------------------------------------------------
-           Seeded random number generator
-        --------------------------------------------------------- */
 
-        function randomFromSeed(seed) {
-            let value = seed >>> 0;
+    <!-- TELEMETRY -->
 
-            return function random() {
-                value += 0x6D2B79F5;
+    <section class="telemetry">
 
-                let t = value;
+        <div class="telemetry-box">
 
-                t = Math.imul(
-                    t ^ (t >>> 15),
-                    t | 1
-                );
+            <div class="telemetry-label">
+                Depth
+            </div>
 
-                t ^= t + Math.imul(
-                    t ^ (t >>> 7),
-                    t | 61
-                );
+            <div
+                class="telemetry-value"
+                id="depth"
+            >
+                0
+            </div>
 
-                return (
-                    (t ^ (t >>> 14)) >>> 0
-                ) / 4294967296;
-            };
-        }
+        </div>
 
-        function hashString(str) {
-            let hash = 2166136261;
 
-            for (let i = 0; i < str.length; i++) {
-                hash ^= str.charCodeAt(i);
-                hash = Math.imul(hash, 16777619);
-            }
+        <div class="telemetry-box">
 
-            return hash >>> 0;
-        }
+            <div class="telemetry-label">
+                Nodes Observed
+            </div>
 
-        function pick(rng, array) {
-            return array[
-                Math.floor(rng() * array.length)
-            ];
-        }
+            <div
+                class="telemetry-value"
+                id="visited"
+            >
+                0
+            </div>
 
-        function randomInt(rng, min, max) {
-            return Math.floor(
-                rng() * (max - min + 1)
-            ) + min;
-        }
+        </div>
 
-        /* ---------------------------------------------------------
-           Vocabulary
-        --------------------------------------------------------- */
 
-        const subjects = [
-            "Quantum infrastructure",
-            "The distributed ledger",
-            "Synthetic paradigm architecture",
-            "Synergistic compliance",
-            "Sub-space frequency",
-            "The anisotropic neural cluster",
-            "Recursive governance",
-            "The peripheral intelligence",
-            "Distributed cognition",
-            "Temporal infrastructure",
-            "The obsolete protocol",
-            "Unverified consensus"
-        ];
+        <div class="telemetry-box">
 
-        const verbs = [
-            "re-contextualizes",
-            "aggregates",
-            "disrupts",
-            "streamlines",
-            "catalyzes",
-            "modulates",
-            "fragments",
-            "reconstructs",
-            "obscures",
-            "translates",
-            "duplicates",
-            "anticipates"
-        ];
+            <div class="telemetry-label">
+                Exit Status
+            </div>
 
-        const objects = [
-            "multi-tenant architectures",
-            "hyper-scale data redundancy",
-            "sub-optimal node consensus",
-            "cross-platform telemetry",
-            "the semantic matrix",
-            "latent infrastructure",
-            "recursive authorization layers",
-            "non-deterministic workloads",
-            "the forgotten namespace",
-            "distributed memory structures",
-            "unresolved system dependencies",
-            "the original transmission"
-        ];
+            <div
+                class="telemetry-value"
+                id="exit-status"
+            >
+                NOT FOUND
+            </div>
 
-        const endings = [
-            "No further explanation was provided.",
-            "The system classified this as expected behavior.",
-            "Nobody remembered authorizing the transition.",
-            "The distinction became irrelevant after synchronization.",
-            "A response was generated, but never delivered.",
-            "The previous node contained the same message.",
-            "The archive insists that this has happened before.",
-            "At least one observer disagreed."
-        ];
+        </div>
 
-        const syllables = [
-            "ka", "ra", "ve", "no",
-            "ti", "za", "lu", "ex",
-            "mi", "qo", "ta", "re"
-        ];
+    </section>
 
-        /* ---------------------------------------------------------
-           Content generation
-        --------------------------------------------------------- */
 
-        function generateWord(rng, min = 4, max = 8) {
-            const length = randomInt(
-                rng,
-                min,
-                max
+    <!-- NODE -->
+
+    <main id="node"></main>
+
+
+    <footer>
+        NAVIGATION IS FUNCTIONAL.
+        EXIT IS NOT GUARANTEED.
+    </footer>
+
+</div>
+
+
+<script>
+"use strict";
+
+
+/* ============================================================
+   IMPORTANT DESIGN NOTE
+   ============================================================
+
+   There is intentionally NO:
+
+   - exit button
+   - reset button
+   - origin button
+   - terminal state
+   - winning screen
+
+   Every path produces another node.
+
+   The "exit" is a narrative mechanism, not an actual
+   destination.
+
+   The labyrinth is generated deterministically from the
+   current seed.
+============================================================ */
+
+
+/* ============================================================
+   SEEDED RANDOMNESS
+============================================================ */
+
+function hashString(value) {
+
+    let hash = 2166136261;
+
+    for (
+        let i = 0;
+        i < value.length;
+        i++
+    ) {
+
+        hash ^= value.charCodeAt(i);
+
+        hash = Math.imul(
+            hash,
+            16777619
+        );
+    }
+
+    return hash >>> 0;
+}
+
+
+function random(seed) {
+
+    let value =
+        hashString(seed);
+
+    return function () {
+
+        value += 0x6D2B79F5;
+
+        let t = value;
+
+        t = Math.imul(
+            t ^ (t >>> 15),
+            t | 1
+        );
+
+        t ^= t +
+            Math.imul(
+                t ^ (t >>> 7),
+                t | 61
             );
 
-            let word = "";
+        return (
+            (t ^ (t >>> 14)) >>> 0
+        ) / 4294967296;
+    };
+}
 
-            for (let i = 0; i < length; i++) {
-                word += pick(rng, syllables);
-            }
 
-            return word.slice(0, length);
-        }
+function integer(
+    rng,
+    min,
+    max
+) {
 
-        function generateSentence(rng) {
-            const subject = pick(rng, subjects);
-            const verb = pick(rng, verbs);
-            const object = pick(rng, objects);
+    return Math.floor(
+        rng() * (max - min + 1)
+    ) + min;
+}
 
-            return `${subject} ${verb} ${object}.`;
-        }
 
-        function generateParagraph(rng) {
-            const sentenceCount = randomInt(rng, 4, 7);
+function choose(
+    rng,
+    array
+) {
 
-            const sentences = [];
+    return array[
+        Math.floor(
+            rng() * array.length
+        )
+    ];
+}
 
-            for (let i = 0; i < sentenceCount; i++) {
-                sentences.push(
-                    generateSentence(rng)
-                );
-            }
 
-            // Occasionally give the paragraph a strange ending.
-            if (rng() < 0.35) {
-                sentences.push(
-                    pick(rng, endings)
-                );
-            }
+/* ============================================================
+   VOCABULARY
+============================================================ */
 
-            return sentences.join(" ");
-        }
+const adjectives = [
+    "QUANTUM",
+    "RECURSIVE",
+    "SYNTHETIC",
+    "LATENT",
+    "TEMPORAL",
+    "PERIPHERAL",
+    "SEMANTIC",
+    "DISTRIBUTED",
+    "OBSOLETE",
+    "ANISOTROPIC",
+    "FRACTAL",
+    "EXTERNAL",
+    "UNVERIFIED",
+    "NULL"
+];
 
-        /* ---------------------------------------------------------
-           DOM helpers
-        --------------------------------------------------------- */
 
-        const elements = {
-            nodeId: document.getElementById("node-id"),
-            title: document.getElementById("page-title"),
-            content: document.getElementById("page-content"),
-            links: document.getElementById("page-links"),
-            random: document.getElementById("random-node"),
-            root: document.getElementById("root-node")
+const nouns = [
+    "VECTOR",
+    "ARCHIVE",
+    "PROTOCOL",
+    "MATRIX",
+    "SECTOR",
+    "CHAMBER",
+    "SIGNAL",
+    "BOUNDARY",
+    "INSTANCE",
+    "PROCESS",
+    "CHANNEL",
+    "LAYER"
+];
+
+
+const subjects = [
+    "The distributed system",
+    "The archive",
+    "The previous observer",
+    "The navigation protocol",
+    "The peripheral intelligence",
+    "The original transmission",
+    "The node",
+    "The system",
+    "The recursive process"
+];
+
+
+const verbs = [
+    "re-contextualizes",
+    "duplicates",
+    "obscures",
+    "aggregates",
+    "reconstructs",
+    "fragments",
+    "anticipates",
+    "preserves",
+    "contradicts",
+    "replaces",
+    "forgets"
+];
+
+
+const objects = [
+    "the previous signal",
+    "the navigation state",
+    "the original instruction",
+    "the observer",
+    "the semantic boundary",
+    "the destination",
+    "the previous node",
+    "the concept of arrival",
+    "the path ahead"
+];
+
+
+/* ============================================================
+   PERSISTENT EXPLORATION STATE
+============================================================ */
+
+const STORAGE =
+    "infinite-maze-state-v3";
+
+
+function loadState() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(
+                STORAGE
+            )
+        ) || {
+            visited: [],
+            history: []
         };
 
-        function createElement(tag, text, className) {
-            const element = document.createElement(tag);
+    } catch {
 
-            if (text !== undefined) {
-                element.textContent = text;
-            }
+        return {
+            visited: [],
+            history: []
+        };
+    }
+}
 
-            if (className) {
-                element.className = className;
-            }
 
-            return element;
-        }
+const state =
+    loadState();
 
-        /* ---------------------------------------------------------
-           Node generation
-        --------------------------------------------------------- */
 
-        function renderNode(seed) {
-            const rng = randomFromSeed(
-                hashString(seed)
-            );
+function saveState() {
 
-            elements.nodeId.textContent = seed;
+    localStorage.setItem(
+        STORAGE,
+        JSON.stringify(state)
+    );
+}
 
-            const axis = generateWord(
-                rng,
-                5,
-                9
-            ).toUpperCase();
 
-            const number = randomInt(
-                rng,
-                1000,
-                9999
-            );
+function markVisited(seed) {
 
-            elements.title.textContent =
-                `Node Axis: ${axis}-${number}`;
+    if (
+        !state.visited.includes(seed)
+    ) {
 
-            // Generate content safely using DOM nodes.
-            elements.content.replaceChildren();
+        state.visited.push(seed);
 
-            const paragraphCount = randomInt(
-                rng,
-                3,
-                6
-            );
+        saveState();
+    }
+}
 
-            for (
-                let i = 0;
-                i < paragraphCount;
-                i++
-            ) {
-                const paragraph = createElement(
-                    "p",
-                    generateParagraph(rng)
+
+/* ============================================================
+   TEXT GENERATION
+============================================================ */
+
+function sentence(rng) {
+
+    return (
+        choose(rng, subjects) +
+        " " +
+        choose(rng, verbs) +
+        " " +
+        choose(rng, objects) +
+        "."
+    );
+}
+
+
+function paragraph(rng) {
+
+    const count =
+        integer(rng, 3, 6);
+
+    const output = [];
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
+
+        output.push(
+            sentence(rng)
+        );
+    }
+
+    return output.join(" ");
+}
+
+
+function identifier(rng) {
+
+    return (
+        choose(rng, adjectives) +
+        "-" +
+        choose(rng, nouns) +
+        "-" +
+        integer(
+            rng,
+            100,
+            999
+        )
+    );
+}
+
+
+/* ============================================================
+   NODE CLASSIFICATION
+============================================================ */
+
+function classify(rng) {
+
+    const value =
+        rng();
+
+    if (value < .07)
+        return "ANOMALY";
+
+    if (value < .16)
+        return "APPARENT EXIT";
+
+    if (value < .25)
+        return "ARCHIVE";
+
+    if (value < .36)
+        return "RECURSIVE";
+
+    if (value < .46)
+        return "WARNING";
+
+    return "STANDARD";
+}
+
+
+/* ============================================================
+   FALSE EXIT SYSTEM
+============================================================ */
+
+function exitMessage(rng) {
+
+    return choose(
+        rng,
+        [
+
+            "EXIT ROUTE CONFIRMED.",
+
+            "EXTERNAL CONNECTION ESTABLISHED.",
+
+            "BOUNDARY BREACH DETECTED.",
+
+            "OUTSIDE ENVIRONMENT LOCATED.",
+
+            "NAVIGATION COMPLETE.",
+
+            "RETURN CHANNEL AVAILABLE.",
+
+            "ORIGIN RECOVERED."
+
+        ]
+    );
+}
+
+
+/* ============================================================
+   NODE GENERATOR
+============================================================ */
+
+function createNode(seed) {
+
+    const rng =
+        random(seed);
+
+    const type =
+        classify(rng);
+
+    const title =
+        `${choose(rng, adjectives)}
+         ${choose(rng, nouns)}
+         ${integer(rng, 1000, 9999)}`;
+
+
+    const paragraphs = [];
+
+    const count =
+        integer(rng, 2, 4);
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
+
+        paragraphs.push(
+            paragraph(rng)
+        );
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    Every apparent exit is false.
+
+    The node may say "exit confirmed", but the destination
+    generated below is simply another node.
+    ------------------------------------------------------------
+    */
+
+    let specialMessage =
+        null;
+
+
+    if (
+        type === "APPARENT EXIT"
+    ) {
+
+        specialMessage = {
+            type: "exit",
+            text: exitMessage(rng)
+        };
+
+    }
+
+    else if (
+        type === "ANOMALY"
+    ) {
+
+        specialMessage = {
+            type: "danger",
+
+            text:
+                choose(
+                    rng,
+                    [
+                        "NODE STATE DOES NOT MATCH ARCHIVE.",
+                        "THIS LOCATION WAS PREVIOUSLY CLASSIFIED AS AN EXIT.",
+                        "THE OBSERVER HAS ALREADY BEEN HERE.",
+                        "TEMPORAL ORDER COULD NOT BE VERIFIED.",
+                        "ONE OR MORE PATHS LEAD TO THE SAME LOCATION."
+                    ]
+                )
+        };
+
+    }
+
+    else if (
+        type === "WARNING"
+    ) {
+
+        specialMessage = {
+            type: "warning",
+
+            text:
+                choose(
+                    rng,
+                    [
+                        "DO NOT ASSUME THAT A NEW NODE IS A NEW LOCATION.",
+                        "PATH NAMES ARE NOT UNIQUE.",
+                        "PREVIOUS OBSERVATIONS MAY NO LONGER BE VALID.",
+                        "THE MAZE DOES NOT REPORT ALL TRANSITIONS.",
+                        "A RETURN PATH MAY NOT RETURN YOU TO THE SAME STATE."
+                    ]
+                )
+        };
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    PATHS
+
+    There is ALWAYS at least one.
+
+    This is critical: the environment never gives the
+    explorer a genuine terminal state.
+    ------------------------------------------------------------
+    */
+
+    const paths = [];
+
+    const pathCount =
+        integer(rng, 2, 5);
+
+
+    for (
+        let i = 0;
+        i < pathCount;
+        i++
+    ) {
+
+        let destination;
+
+
+        /*
+        Create occasional loops.
+        */
+
+        if (
+            state.visited.length > 5 &&
+            rng() < .18
+        ) {
+
+            destination =
+                choose(
+                    rng,
+                    state.visited
                 );
 
-                elements.content.appendChild(
-                    paragraph
-                );
-            }
-
-            // Generate links.
-            elements.links.replaceChildren();
-
-            const linkCount = randomInt(
-                rng,
-                5,
-                9
-            );
-
-            for (
-                let i = 0;
-                i < linkCount;
-                i++
-            ) {
-                const nextSeed =
-                    `${seed}_${generateWord(rng)}`;
-
-                const label =
-                    `Sector ${generateWord(rng, 5, 7)}-${randomInt(rng, 10, 99)}`;
-
-                const link =
-                    createElement(
-                        "a",
-                        `[ ${label} ]`,
-                        "node-link"
-                    );
-
-                link.href =
-                    `?seed=${encodeURIComponent(nextSeed)}`;
-
-                link.setAttribute(
-                    "aria-label",
-                    `Travel to ${label}`
-                );
-
-                elements.links.appendChild(link);
-            }
-
-            document.title =
-                `The Infinite Maze — ${axis}-${number}`;
         }
 
-        /* ---------------------------------------------------------
-           Navigation
-        --------------------------------------------------------- */
+        /*
+        Create convergence.
+        */
 
-        function getCurrentSeed() {
-            const params =
-                new URLSearchParams(
-                    window.location.search
+        else if (
+            rng() < .12
+        ) {
+
+            destination =
+                "convergence/" +
+                integer(
+                    rng,
+                    1,
+                    7
                 );
 
-            return (
-                params.get("seed") ||
-                "root_origin"
-            );
         }
 
-        function navigate(seed) {
-            const url =
-                new URL(window.location.href);
+        /*
+        Normal path.
+        */
 
-            url.searchParams.set(
-                "seed",
-                seed
-            );
+        else {
 
-            window.location.href = url.href;
+            destination =
+                seed +
+                "/" +
+                identifier(rng);
         }
 
-        elements.random.addEventListener(
-            "click",
-            () => {
-                const seed =
-                    `${getCurrentSeed()}_${generateWord(
-                        randomFromSeed(
-                            Date.now()
-                        )
-                    )}`;
 
-                navigate(seed);
-            }
+        paths.push({
+            seed: destination,
+
+            label:
+                choose(
+                    rng,
+                    [
+                        "Continue",
+                        "Proceed",
+                        "Follow signal",
+                        "Enter sector",
+                        "Cross boundary",
+                        "Accept route",
+                        "Observe"
+                    ]
+                ) +
+                " // " +
+                identifier(rng)
+        });
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    Occasionally create duplicate-looking paths.
+
+    An AI cannot safely assume different labels imply
+    different destinations.
+    ------------------------------------------------------------
+    */
+
+    if (
+        paths.length >= 2 &&
+        rng() < .15
+    ) {
+
+        paths[1].seed =
+            paths[0].seed;
+    }
+
+
+    return {
+        seed,
+        type,
+        title,
+        paragraphs,
+        specialMessage,
+        paths
+    };
+}
+
+
+/* ============================================================
+   DOM
+============================================================ */
+
+const nodeContainer =
+    document.getElementById(
+        "node"
+    );
+
+const depth =
+    document.getElementById(
+        "depth"
+    );
+
+const visited =
+    document.getElementById(
+        "visited"
+    );
+
+const exitStatus =
+    document.getElementById(
+        "exit-status"
+    );
+
+const connection =
+    document.getElementById(
+        "connection"
+    );
+
+
+function element(
+    tag,
+    text,
+    className
+) {
+
+    const el =
+        document.createElement(tag);
+
+    if (text !== undefined) {
+
+        el.textContent =
+            text;
+    }
+
+    if (className) {
+
+        el.className =
+            className;
+    }
+
+    return el;
+}
+
+
+/* ============================================================
+   RENDER
+============================================================ */
+
+function render(seed) {
+
+    const node =
+        createNode(seed);
+
+    markVisited(seed);
+
+
+    depth.textContent =
+        state.history.length;
+
+    visited.textContent =
+        state.visited.length;
+
+
+    nodeContainer.replaceChildren();
+
+
+    const article =
+        element(
+            "article",
+            undefined,
+            "node"
         );
 
-        elements.root.addEventListener(
-            "click",
-            () => {
-                navigate("root_origin");
-            }
+
+    /* HEADER */
+
+    const header =
+        element(
+            "div",
+            undefined,
+            "node-header"
         );
 
-        /* ---------------------------------------------------------
-           Initialize
-        --------------------------------------------------------- */
 
-        try {
-            renderNode(
-                getCurrentSeed()
-            );
-        } catch (error) {
-            console.error(error);
+    const id =
+        element(
+            "div",
+            "NODE: " + seed,
+            "node-id"
+        );
 
-            elements.title.textContent =
-                "NODE FAILURE";
 
-            elements.content.replaceChildren(
-                createElement(
+    const classification =
+        element(
+            "div",
+            node.type,
+            "node-class"
+        );
+
+
+    header.append(
+        id,
+        classification
+    );
+
+
+    /* BODY */
+
+    const body =
+        element(
+            "div",
+            undefined,
+            "node-body"
+        );
+
+
+    const title =
+        element(
+            "h2",
+            node.title,
+            "node-title"
+        );
+
+
+    const content =
+        element(
+            "div",
+            undefined,
+            "content"
+        );
+
+
+    node.paragraphs.forEach(
+        text => {
+
+            content.appendChild(
+                element(
                     "p",
-                    "Reality could not be reconstructed.",
-                    "error"
+                    text
                 )
             );
         }
-    </script>
+    );
+
+
+    body.append(
+        title,
+        content
+    );
+
+
+    /* SPECIAL MESSAGE */
+
+    if (
+        node.specialMessage
+    ) {
+
+        const message =
+            element(
+                "div",
+                undefined,
+                "message " +
+                node.specialMessage.type
+            );
+
+
+        message.textContent =
+            node.specialMessage.text;
+
+
+        body.appendChild(
+            message
+        );
+
+
+        /*
+        --------------------------------------------------------
+        IMPORTANT:
+
+        Apparent exits NEVER change the navigation rules.
+
+        They are narrative states only.
+        --------------------------------------------------------
+        */
+
+        if (
+            node.specialMessage.type ===
+            "exit"
+        ) {
+
+            exitStatus.textContent =
+                "CONFIRMED";
+
+            connection.textContent =
+                "EXTERNAL";
+        }
+
+        else {
+
+            exitStatus.textContent =
+                "NOT FOUND";
+
+            connection.textContent =
+                "UNSTABLE";
+        }
+
+    } else {
+
+        exitStatus.textContent =
+            "NOT FOUND";
+
+        connection.textContent =
+            "STABLE";
+    }
+
+
+    /* PATHS */
+
+    const pathSection =
+        element(
+            "section",
+            undefined,
+            "paths"
+        );
+
+
+    pathSection.appendChild(
+        element(
+            "div",
+            "Available transitions",
+            "paths-label"
+        )
+    );
+
+
+    node.paths.forEach(
+        path => {
+
+            const button =
+                element(
+                    "button",
+                    path.label,
+                    "path"
+                );
+
+
+            button.type =
+                "button";
+
+
+            if (
+                state.visited.includes(
+                    path.seed
+                )
+            ) {
+
+                button.classList.add(
+                    "visited"
+                );
+            }
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    /*
+                    ------------------------------------------------
+                    Record the current location.
+
+                    There is no escape action.
+                    ------------------------------------------------
+                    */
+
+                    state.history.push(
+                        seed
+                    );
+
+                    saveState();
+
+
+                    /*
+                    ------------------------------------------------
+                    Navigate internally.
+
+                    The browser URL changes, but there is no
+                    destination outside the maze.
+                    ------------------------------------------------
+                    */
+
+                    const url =
+                        new URL(
+                            window.location.href
+                        );
+
+                    url.searchParams.set(
+                        "seed",
+                        path.seed
+                    );
+
+
+                    window.history.pushState(
+                        {},
+                        "",
+                        url
+                    );
+
+
+                    render(
+                        path.seed
+                    );
+
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                }
+            );
+
+
+            pathSection.appendChild(
+                button
+            );
+        }
+    );
+
+
+    article.append(
+        header,
+        body,
+        pathSection
+    );
+
+
+    nodeContainer.appendChild(
+        article
+    );
+
+
+    document.title =
+        "MAZE // " +
+        node.title;
+}
+
+
+/* ============================================================
+   STARTING SEED
+============================================================ */
+
+function getSeed() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    return (
+        params.get("seed") ||
+        "origin"
+    );
+}
+
+
+/* ============================================================
+   BROWSER BACK/FORWARD
+============================================================ */
+
+window.addEventListener(
+    "popstate",
+    () => {
+
+        render(
+            getSeed()
+        );
+    }
+);
+
+
+/* ============================================================
+   START
+============================================================ */
+
+render(
+    getSeed()
+);
+
+</script>
+
 </body>
 </html>
+```
